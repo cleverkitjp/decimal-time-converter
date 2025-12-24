@@ -1,0 +1,564 @@
+<!-- PART 1/2: index.html（ここから） -->
+<!doctype html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+
+  <title>小数時間↔時間・分 変換 | 6.3時間は何時間何分？</title>
+  <meta name="description" content="小数時間（例6.3）を時間・分に、時間・分を小数時間に即変換。切り捨て/四捨五入/切り上げ、2桁/3桁/そのまま表示、結果コピー対応。スマホ対応・登録不要。" />
+
+  <meta property="og:title" content="小数時間↔時間・分 変換 | 6.3時間は何時間何分？" />
+  <meta property="og:description" content="小数時間→時分、時分→小数の双方向を1画面で即変換。丸め設定と結果コピー、よくある例のクイック入力付き。" />
+  <meta property="og:type" content="website" />
+
+  <!-- Google Analytics GA4 -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-F6517NYNFF"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'G-F6517NYNFF');
+  </script>
+
+  <!-- AdSense -->
+  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-9727255179923866"
+       crossorigin="anonymous"></script>
+
+  <!-- common.css -->
+  <link rel="stylesheet" href="https://cleverkitjp.github.io/common.css">
+
+  <style>
+    /* common.css を前提に最小限だけ補助 */
+    .ck-wrap{max-width:920px;margin:0 auto;padding:16px}
+    .ck-title{margin:6px 0 2px;font-size:1.35rem;line-height:1.25}
+    .ck-sub{margin:0 0 14px;color:var(--muted,#6b7a8a);font-size:.95rem}
+    .ck-grid{display:grid;grid-template-columns:1fr;gap:12px}
+    .ck-card{background:var(--card,#fff);border:1px solid var(--line,#e8edf3);border-radius:18px;padding:14px;box-shadow:var(--shadow,0 10px 22px rgba(20,40,80,.12))}
+    .ck-card h2{margin:0 0 10px;font-size:1.05rem}
+    .ck-row{display:flex;gap:10px;align-items:flex-end;flex-wrap:wrap}
+    .ck-field{flex:1;min-width:160px}
+    .ck-field label{display:block;font-size:.85rem;color:var(--muted,#6b7a8a);margin:0 0 6px}
+    .ck-field input, .ck-field select{
+      width:100%;
+      padding:12px 12px;
+      border:1px solid var(--line,#e8edf3);
+      border-radius:14px;
+      font-size:1rem;
+      background:#fff;
+    }
+    .ck-field input:focus, .ck-field select:focus{outline:2px solid rgba(31,102,193,.25);outline-offset:2px}
+    .ck-result{
+      margin-top:10px;
+      padding:12px;
+      border-radius:16px;
+      background:rgba(31,102,193,.06);
+      border:1px dashed rgba(31,102,193,.25);
+    }
+    .ck-result .big{font-size:1.35rem;font-weight:800;letter-spacing:.2px}
+    .ck-result .small{margin-top:6px;color:var(--muted,#6b7a8a);font-size:.9rem}
+    .ck-actions{display:flex;gap:10px;margin-top:10px;flex-wrap:wrap}
+    .ck-btn{
+      appearance:none;border:0;border-radius:14px;
+      padding:10px 12px;font-weight:700;
+      background:var(--blue,#1f66c1);color:#fff;
+      box-shadow:var(--shadow-press,0 4px 10px rgba(20,40,80,.18));
+    }
+    .ck-btn:disabled{opacity:.45}
+    .ck-btn.secondary{background:#203246}
+    .ck-chiprow{display:flex;gap:8px;flex-wrap:wrap;margin-top:10px}
+    .ck-chip{
+      border:1px solid var(--line,#e8edf3);
+      background:#fff;
+      border-radius:999px;
+      padding:8px 10px;
+      font-weight:700;
+      font-size:.95rem;
+    }
+    .ck-err{margin-top:8px;color:#b42318;font-weight:700;font-size:.92rem}
+    details.ck-details{margin-top:12px}
+    details.ck-details > summary{
+      cursor:pointer;
+      font-weight:800;
+      list-style:none;
+      padding:10px 12px;
+      border-radius:14px;
+      border:1px solid var(--line,#e8edf3);
+      background:#fff;
+    }
+    details.ck-details[open] > summary{background:rgba(255,138,0,.08);border-color:rgba(255,138,0,.35)}
+    details.ck-details .inner{margin-top:10px;padding:12px;border-radius:16px;border:1px solid var(--line,#e8edf3);background:#fff}
+    .ck-seg{display:flex;gap:8px;flex-wrap:wrap}
+    .ck-seg input{display:none}
+    .ck-seg label{
+      border:1px solid var(--line,#e8edf3);
+      background:#fff;border-radius:999px;
+      padding:8px 10px;font-weight:800;font-size:.95rem;
+    }
+    .ck-seg input:checked + label{border-color:rgba(31,102,193,.45);background:rgba(31,102,193,.08)}
+    .ck-note{margin-top:12px;color:var(--muted,#6b7a8a);font-size:.92rem;line-height:1.45}
+    .ck-toast{
+      position:fixed;left:50%;bottom:16px;transform:translateX(-50%);
+      background:#111827;color:#fff;
+      padding:10px 12px;border-radius:999px;
+      font-weight:800;opacity:0;pointer-events:none;
+      transition:opacity .18s ease;
+      max-width:92vw;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;
+    }
+    .ck-toast.show{opacity:.95}
+  </style>
+</head>
+
+<body>
+  <main class="ck-wrap">
+    <h1 class="ck-title">小数時間↔時間・分 変換</h1>
+    <p class="ck-sub">例：<b>6.3時間 → 6時間18分</b> / <b>6時間18分 → 6.30時間</b></p>
+
+    <section class="ck-grid">
+      <!-- Card A -->
+      <article class="ck-card" aria-labelledby="aTitle">
+        <h2 id="aTitle">小数時間 → 時間・分</h2>
+
+        <div class="ck-row">
+          <div class="ck-field">
+            <label for="decHours">小数時間（例：6.3）</label>
+            <input id="decHours" inputmode="decimal" placeholder="例：6.3" autocomplete="off" />
+          </div>
+
+          <div class="ck-field" style="min-width:220px;">
+            <label for="roundDecToMin">小数→分 の丸め</label>
+            <select id="roundDecToMin">
+              <option value="floor">切り捨て</option>
+              <option value="round" selected>四捨五入</option>
+              <option value="ceil">切り上げ</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="ck-result" id="aResultBox" role="status" aria-live="polite">
+          <div class="big" id="aBig">—</div>
+          <div class="small" id="aSmall">入力すると計算します</div>
+        </div>
+
+        <div class="ck-actions">
+          <button class="ck-btn" id="aCopy" disabled>結果をコピー</button>
+          <button class="ck-btn secondary" id="aClear">クリア</button>
+        </div>
+
+        <div class="ck-chiprow" aria-label="クイック入力">
+          <button class="ck-chip" data-dec="6.25">6.25</button>
+          <button class="ck-chip" data-dec="7.5">7.5</button>
+          <button class="ck-chip" data-dec="0.1">0.1</button>
+          <button class="ck-chip" data-dec="0.75">0.75</button>
+          <button class="ck-chip" data-dec="1.2">1.2</button>
+          <button class="ck-chip" data-dec="8">8</button>
+        </div>
+
+        <div class="ck-err" id="aErr" hidden></div>
+      </article>
+
+      <!-- Card B -->
+      <article class="ck-card" aria-labelledby="bTitle">
+        <h2 id="bTitle">時間・分 → 小数時間</h2>
+
+        <div class="ck-row">
+          <div class="ck-field" style="min-width:140px;flex:0 0 140px;">
+            <label for="hInt">時間（整数）</label>
+            <input id="hInt" inputmode="numeric" placeholder="例：6" autocomplete="off" />
+          </div>
+          <div class="ck-field" style="min-width:140px;flex:0 0 140px;">
+            <label for="mInt">分（0–59）</label>
+            <input id="mInt" inputmode="numeric" placeholder="例：18" autocomplete="off" />
+          </div>
+
+          <div class="ck-field" style="min-width:260px;">
+            <label>小数表示</label>
+            <div class="ck-seg" role="radiogroup" aria-label="小数表示の桁数">
+              <input type="radio" name="decFmt" id="fmt2" value="2" checked>
+              <label for="fmt2">2桁</label>
+
+              <input type="radio" name="decFmt" id="fmt3" value="3">
+              <label for="fmt3">3桁</label>
+
+              <input type="radio" name="decFmt" id="fmtRaw" value="raw">
+              <label for="fmtRaw">そのまま</label>
+            </div>
+          </div>
+        </div>
+
+        <div class="ck-result" id="bResultBox" role="status" aria-live="polite">
+          <div class="big" id="bBig">—</div>
+          <div class="small" id="bSmall">入力すると計算します</div>
+        </div>
+
+        <div class="ck-actions">
+          <button class="ck-btn" id="bCopy" disabled>結果をコピー</button>
+          <button class="ck-btn secondary" id="bClear">クリア</button>
+        </div>
+
+        <div class="ck-err" id="bErr" hidden></div>
+      </article>
+    </section>
+
+    <details class="ck-details">
+      <summary>丸め・扱い（詳細）</summary>
+      <div class="inner">
+        <div class="ck-note" style="margin-top:0">
+          小数→分は上の「小数→分 の丸め」を使用します。<br>
+          分→小数は「小数表示」の 2桁/3桁/そのまま を使用します（そのままは最大6桁で末尾0を省略）。
+        </div>
+        <div class="ck-note">
+          <b>60分繰り上げ</b>：小数→分の結果が60分になった場合、時間を+1して0分にします。
+        </div>
+        <div class="ck-row" style="margin-top:10px">
+          <div class="ck-field" style="min-width:240px;">
+            <label for="allowComma">6,3 のようなカンマ小数</label>
+            <select id="allowComma">
+              <option value="yes" selected>許可（6,3 → 6.3）</option>
+              <option value="no">許可しない</option>
+            </select>
+          </div>
+          <div class="ck-field" style="min-width:240px;">
+            <label for="denyExp">指数表記（1e2 など）</label>
+            <select id="denyExp">
+              <option value="yes" selected>無効にする（推奨）</option>
+              <option value="no">許可する</option>
+            </select>
+          </div>
+        </div>
+      </div>
+    </details>
+
+    <div class="ck-note">
+      よくある例：0.1時間=6分、0.25時間=15分、7時間30分=7.50時間（表示桁設定により変わる場合があります）
+    </div>
+  </main>
+
+  <div class="ck-toast" id="toast">コピーしました</div>
+
+  <div id="ck-footer-container"></div>
+
+  <script>
+    (function() {
+      var container = document.getElementById('ck-footer-container');
+      if (!container) return;
+
+      fetch('https://cleverkitjp.github.io/footer.html')
+        .then(function(response) { return response.text(); })
+        .then(function(html) {
+          container.innerHTML = html;
+
+          try {
+            (adsbygoogle = window.adsbygoogle || []).push({});
+          } catch (e) {
+            console.warn('adsbygoogle error', e);
+          }
+        })
+        .catch(function(e) {
+          console.warn('footer load error', e);
+        });
+    })();
+  </script>
+
+  <script>
+    // ===== Utilities =====
+    function $(id){ return document.getElementById(id); }
+
+    function showToast(msg){
+      var t = $('toast');
+      t.textContent = msg || 'コピーしました';
+      t.classList.add('show');
+      window.clearTimeout(showToast._tm);
+      showToast._tm = window.setTimeout(function(){ t.classList.remove('show'); }, 1100);
+    }
+
+    function copyText(text){
+      if (!text) return Promise.reject(new Error('empty'));
+      if (navigator.clipboard && navigator.clipboard.writeText){
+        return navigator.clipboard.writeText(text);
+      }
+      // Fallback
+      return new Promise(function(resolve, reject){
+        try{
+          var ta = document.createElement('textarea');
+          ta.value = text;
+          ta.setAttribute('readonly', '');
+          ta.style.position='fixed';
+          ta.style.left='-9999px';
+          document.body.appendChild(ta);
+          ta.select();
+          var ok = document.execCommand('copy');
+          document.body.removeChild(ta);
+          ok ? resolve() : reject(new Error('copy failed'));
+        }catch(e){ reject(e); }
+      });
+    }
+
+    function isIntegerString(s){
+      return /^[0-9]+$/.test(s);
+    }
+
+    function normalizeDecimalInput(raw, allowComma){
+      if (raw == null) return '';
+      var s = String(raw).trim();
+      if (!s) return '';
+      if (allowComma === 'yes') s = s.replace(',', '.');
+      return s;
+    }
+
+    function denyExponentIfNeeded(s, denyExp){
+      if (denyExp === 'yes' && /e/i.test(s)) return true;
+      return false;
+    }
+
+    function roundByMode(x, mode){
+      if (mode === 'floor') return Math.floor(x);
+      if (mode === 'ceil') return Math.ceil(x);
+      return Math.round(x); // default: round
+    }
+
+    function trimZeros(numStr){
+      // "6.500000" -> "6.5", "6.000" -> "6"
+      if (!numStr.includes('.')) return numStr;
+      numStr = numStr.replace(/0+$/,'').replace(/\.$/,'');
+      return numStr;
+    }
+
+    function formatRawDecimal(x){
+      // up to 6 decimals, then trim zeros
+      var s = x.toFixed(6);
+      return trimZeros(s);
+    }
+  </script>
+<!-- PART 1/2: index.html（ここまで） -->
+<!-- PART 2/2: index.html（ここから） -->
+  <script>
+    // ===== Elements =====
+    var decHours = $('decHours');
+    var roundDecToMin = $('roundDecToMin');
+    var aBig = $('aBig');
+    var aSmall = $('aSmall');
+    var aErr = $('aErr');
+    var aCopy = $('aCopy');
+    var aClear = $('aClear');
+
+    var hInt = $('hInt');
+    var mInt = $('mInt');
+    var bBig = $('bBig');
+    var bSmall = $('bSmall');
+    var bErr = $('bErr');
+    var bCopy = $('bCopy');
+    var bClear = $('bClear');
+
+    var allowComma = $('allowComma');
+    var denyExp = $('denyExp');
+
+    var lastAResult = '';
+    var lastBResult = '';
+
+    function setError(el, msg){
+      if (msg){
+        el.hidden = false;
+        el.textContent = msg;
+      }else{
+        el.hidden = true;
+        el.textContent = '';
+      }
+    }
+
+    // ===== A: decimal hours -> h m =====
+    function computeA(){
+      var allow = allowComma.value;
+      var deny = denyExp.value;
+
+      var raw = normalizeDecimalInput(decHours.value, allow);
+      if (!raw){
+        aBig.textContent = '—';
+        aSmall.textContent = '入力すると計算します';
+        setError(aErr, '');
+        aCopy.disabled = true;
+        lastAResult = '';
+        return;
+      }
+
+      if (denyExponentIfNeeded(raw, deny)){
+        aBig.textContent = '—';
+        aSmall.textContent = '指数表記は無効です';
+        setError(aErr, '指数表記（1e2 など）は無効です。通常の数値（例：6.3）で入力してください。');
+        aCopy.disabled = true;
+        lastAResult = '';
+        return;
+      }
+
+      var x = Number(raw);
+      if (!Number.isFinite(x)){
+        aBig.textContent = '—';
+        aSmall.textContent = '数値として解釈できません';
+        setError(aErr, '小数時間を数値で入力してください（例：6.3）。');
+        aCopy.disabled = true;
+        lastAResult = '';
+        return;
+      }
+      if (x < 0){
+        aBig.textContent = '—';
+        aSmall.textContent = '負の数は不可';
+        setError(aErr, '負の小数時間は入力できません。');
+        aCopy.disabled = true;
+        lastAResult = '';
+        return;
+      }
+
+      var hours = Math.floor(x);
+      var frac = x - hours;
+
+      // floating error mitigation
+      var rawMinutes = frac * 60;
+      rawMinutes = Math.round(rawMinutes * 1e9) / 1e9;
+
+      var mode = roundDecToMin.value;
+      var minutes = roundByMode(rawMinutes, mode);
+
+      // 60-min carry
+      if (minutes === 60){
+        hours += 1;
+        minutes = 0;
+      }
+
+      var out = hours + '時間' + minutes + '分';
+      lastAResult = out;
+
+      aBig.textContent = out;
+      aSmall.textContent = hours + 'h + ' + trimZeros(String(frac)) + 'h × 60 = ' + rawMinutes + 'min';
+      setError(aErr, '');
+      aCopy.disabled = false;
+    }
+
+    // ===== B: h m -> decimal hours =====
+    function computeB(){
+      var hs = String(hInt.value || '').trim();
+      var ms = String(mInt.value || '').trim();
+
+      if (!hs && !ms){
+        bBig.textContent = '—';
+        bSmall.textContent = '入力すると計算します';
+        setError(bErr, '');
+        bCopy.disabled = true;
+        lastBResult = '';
+        return;
+      }
+
+      if (!hs || !ms){
+        bBig.textContent = '—';
+        bSmall.textContent = '時間と分を両方入力';
+        setError(bErr, '時間（整数）と分（0〜59）を両方入力してください。');
+        bCopy.disabled = true;
+        lastBResult = '';
+        return;
+      }
+
+      if (!isIntegerString(hs)){
+        bBig.textContent = '—';
+        bSmall.textContent = '時間は整数';
+        setError(bErr, '時間は0以上の整数で入力してください。');
+        bCopy.disabled = true;
+        lastBResult = '';
+        return;
+      }
+      if (!isIntegerString(ms)){
+        bBig.textContent = '—';
+        bSmall.textContent = '分は整数';
+        setError(bErr, '分は0〜59の整数で入力してください。');
+        bCopy.disabled = true;
+        lastBResult = '';
+        return;
+      }
+
+      var h = parseInt(hs, 10);
+      var m = parseInt(ms, 10);
+
+      if (h < 0){
+        bBig.textContent = '—';
+        bSmall.textContent = '負の数は不可';
+        setError(bErr, '負の時間は入力できません。');
+        bCopy.disabled = true;
+        lastBResult = '';
+        return;
+      }
+      if (m < 0 || m > 59){
+        bBig.textContent = '—';
+        bSmall.textContent = '分は0〜59';
+        setError(bErr, '分は0〜59の範囲で入力してください（60は不可）。');
+        bCopy.disabled = true;
+        lastBResult = '';
+        return;
+      }
+
+      var x = h + (m / 60);
+
+      var fmt = document.querySelector('input[name="decFmt"]:checked')?.value || '2';
+      var outNum;
+      if (fmt === '3'){
+        outNum = x.toFixed(3);
+      }else if (fmt === 'raw'){
+        outNum = formatRawDecimal(x);
+      }else{
+        outNum = x.toFixed(2);
+      }
+
+      var out = outNum + '時間';
+      lastBResult = out;
+
+      bBig.textContent = outNum + ' 時間';
+      bSmall.textContent = h + 'h + ' + m + 'min ÷ 60 = ' + x;
+      setError(bErr, '');
+      bCopy.disabled = false;
+    }
+
+    // ===== Events =====
+    decHours.addEventListener('input', computeA);
+    roundDecToMin.addEventListener('change', computeA);
+    allowComma.addEventListener('change', computeA);
+    denyExp.addEventListener('change', computeA);
+
+    hInt.addEventListener('input', computeB);
+    mInt.addEventListener('input', computeB);
+    document.querySelectorAll('input[name="decFmt"]').forEach(function(r){
+      r.addEventListener('change', computeB);
+    });
+
+    document.querySelectorAll('[data-dec]').forEach(function(btn){
+      btn.addEventListener('click', function(){
+        decHours.value = btn.getAttribute('data-dec');
+        computeA();
+        decHours.focus();
+      });
+    });
+
+    aCopy.addEventListener('click', function(){
+      copyText(lastAResult).then(function(){ showToast('コピーしました'); })
+        .catch(function(){ showToast('コピーに失敗しました'); });
+    });
+    bCopy.addEventListener('click', function(){
+      copyText(lastBResult).then(function(){ showToast('コピーしました'); })
+        .catch(function(){ showToast('コピーに失敗しました'); });
+    });
+
+    aClear.addEventListener('click', function(){
+      decHours.value = '';
+      computeA();
+      decHours.focus();
+    });
+    bClear.addEventListener('click', function(){
+      hInt.value = '';
+      mInt.value = '';
+      computeB();
+      hInt.focus();
+    });
+
+    // Initial
+    computeA();
+    computeB();
+  </script>
+</body>
+</html>
+<!-- PART 2/2: index.html（ここまで） -->
