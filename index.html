@@ -1,15 +1,14 @@
-<!-- PART 1/2: index.html（ここから） -->
 <!doctype html>
 <html lang="ja">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
 
-  <title>小数時間↔時間・分 変換 | 6.3時間は何時間何分？</title>
-  <meta name="description" content="小数時間（例6.3）を時間・分に、時間・分を小数時間に即変換。切り捨て/四捨五入/切り上げ、2桁/3桁/そのまま表示、結果コピー対応。スマホ対応・登録不要。" />
+  <title>6.3時間は何時間何分？｜小数時間↔時間・分 変換ツール</title>
+  <meta name="description" content="6.3時間は何時間何分？小数時間（6.3・6.25など）を時間・分に即変換。逆に時間・分から小数時間にも対応。スマホ対応・登録不要の無料ツール。" />
 
-  <meta property="og:title" content="小数時間↔時間・分 変換 | 6.3時間は何時間何分？" />
-  <meta property="og:description" content="小数時間→時分、時分→小数の双方向を1画面で即変換。丸め設定と結果コピー、よくある例のクイック入力付き。" />
+  <meta property="og:title" content="6.3時間は何時間何分？｜小数時間↔時間・分 変換ツール" />
+  <meta property="og:description" content="小数時間と時間・分をワンタップ切替で即変換。丸め設定と結果コピーに対応。" />
   <meta property="og:type" content="website" />
 
   <!-- Google Analytics GA4 -->
@@ -31,52 +30,66 @@
   <style>
     /* common.css を前提に最小限だけ補助 */
     .ck-wrap{max-width:920px;margin:0 auto;padding:16px}
-    .ck-title{margin:6px 0 2px;font-size:1.35rem;line-height:1.25}
-    .ck-sub{margin:0 0 14px;color:var(--muted,#6b7a8a);font-size:.95rem}
-    .ck-grid{display:grid;grid-template-columns:1fr;gap:12px}
-    .ck-card{background:var(--card,#fff);border:1px solid var(--line,#e8edf3);border-radius:18px;padding:14px;box-shadow:var(--shadow,0 10px 22px rgba(20,40,80,.12))}
+    .ck-title{margin:6px 0 6px;font-size:1.5rem;line-height:1.25}
+    .ck-lead{margin:0 0 16px;color:var(--muted,#6b7a8a);font-size:.98rem;line-height:1.55}
+    .ck-card{background:var(--card,#fff);border:1px solid var(--line,#e8edf3);border-radius:20px;padding:16px;box-shadow:var(--shadow,0 10px 22px rgba(20,40,80,.12))}
     .ck-card h2{margin:0 0 10px;font-size:1.05rem}
-    .ck-row{display:flex;gap:10px;align-items:flex-end;flex-wrap:wrap}
+    .ck-toggle{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin:10px 0 14px}
+    .ck-toggle input{display:none}
+    .ck-toggle label{
+      border:1px solid var(--line,#e8edf3);
+      background:#fff;border-radius:999px;
+      padding:10px 12px;font-weight:800;text-align:center;
+      font-size:.98rem;cursor:pointer;
+    }
+    .ck-toggle input:checked + label{border-color:rgba(31,102,193,.45);background:rgba(31,102,193,.1)}
+    .ck-row{display:flex;gap:12px;align-items:flex-end;flex-wrap:wrap}
     .ck-field{flex:1;min-width:160px}
     .ck-field label{display:block;font-size:.85rem;color:var(--muted,#6b7a8a);margin:0 0 6px}
     .ck-field input, .ck-field select{
       width:100%;
-      padding:12px 12px;
+      padding:14px 14px;
       border:1px solid var(--line,#e8edf3);
-      border-radius:14px;
-      font-size:1rem;
+      border-radius:16px;
+      font-size:1.05rem;
       background:#fff;
     }
+    .ck-input-big{font-size:1.25rem;height:52px}
     .ck-field input:focus, .ck-field select:focus{outline:2px solid rgba(31,102,193,.25);outline-offset:2px}
     .ck-result{
-      margin-top:10px;
-      padding:12px;
-      border-radius:16px;
+      margin-top:12px;
+      padding:14px;
+      border-radius:18px;
       background:rgba(31,102,193,.06);
       border:1px dashed rgba(31,102,193,.25);
     }
-    .ck-result .big{font-size:1.35rem;font-weight:800;letter-spacing:.2px}
+    .ck-result .big{font-size:1.6rem;font-weight:800;letter-spacing:.2px}
+    .ck-result .unit{font-size:1.1rem;font-weight:700;margin-left:4px}
     .ck-result .small{margin-top:6px;color:var(--muted,#6b7a8a);font-size:.9rem}
     .ck-actions{display:flex;gap:10px;margin-top:10px;flex-wrap:wrap}
     .ck-btn{
       appearance:none;border:0;border-radius:14px;
-      padding:10px 12px;font-weight:700;
+      padding:10px 14px;font-weight:800;
       background:var(--blue,#1f66c1);color:#fff;
       box-shadow:var(--shadow-press,0 4px 10px rgba(20,40,80,.18));
     }
     .ck-btn:disabled{opacity:.45}
     .ck-btn.secondary{background:#203246}
-    .ck-chiprow{display:flex;gap:8px;flex-wrap:wrap;margin-top:10px}
+    .ck-err{margin-top:8px;color:#b42318;font-weight:700;font-size:.92rem}
+    .ck-quick{margin-top:12px}
+    .ck-quick-title{font-weight:800;margin:0 0 8px;font-size:.95rem;color:var(--muted,#6b7a8a)}
+    .ck-chiprow{display:flex;gap:8px;overflow-x:auto;padding-bottom:4px;scroll-snap-type:x mandatory}
     .ck-chip{
       border:1px solid var(--line,#e8edf3);
       background:#fff;
       border-radius:999px;
-      padding:8px 10px;
-      font-weight:700;
+      padding:8px 12px;
+      font-weight:800;
       font-size:.95rem;
+      white-space:nowrap;
+      scroll-snap-align:start;
     }
-    .ck-err{margin-top:8px;color:#b42318;font-weight:700;font-size:.92rem}
-    details.ck-details{margin-top:12px}
+    details.ck-details{margin-top:16px}
     details.ck-details > summary{
       cursor:pointer;
       font-weight:800;
@@ -97,6 +110,11 @@
     }
     .ck-seg input:checked + label{border-color:rgba(31,102,193,.45);background:rgba(31,102,193,.08)}
     .ck-note{margin-top:12px;color:var(--muted,#6b7a8a);font-size:.92rem;line-height:1.45}
+    .ck-faq{margin-top:22px}
+    .ck-faq h2{font-size:1.15rem;margin:0 0 10px}
+    .ck-faq dl{margin:0;display:grid;gap:10px}
+    .ck-faq dt{font-weight:800}
+    .ck-faq dd{margin:4px 0 0;color:var(--muted,#6b7a8a)}
     .ck-toast{
       position:fixed;left:50%;bottom:16px;transform:translateX(-50%);
       background:#111827;color:#fff;
@@ -111,18 +129,25 @@
 
 <body>
   <main class="ck-wrap">
-    <h1 class="ck-title">小数時間↔時間・分 変換</h1>
-    <p class="ck-sub">例：<b>6.3時間 → 6時間18分</b> / <b>6時間18分 → 6.30時間</b></p>
+    <h1 class="ck-title">6.3時間は何時間何分？</h1>
+    <p class="ck-lead">
+      6.3時間は何時間何分かをすぐ確認できる小数時間の変換ツールです。時間・分から小数時間への変換や何分換算にも対応し、無料・スマホ対応で使えます。
+    </p>
 
-    <section class="ck-grid">
-      <!-- Card A -->
-      <article class="ck-card" aria-labelledby="aTitle">
-        <h2 id="aTitle">小数時間 → 時間・分</h2>
+    <div class="ck-toggle" role="tablist" aria-label="変換方向">
+      <input type="radio" name="mode" id="modeA" value="a" checked>
+      <label for="modeA" role="tab" aria-controls="panelA">小数 → 時分</label>
+      <input type="radio" name="mode" id="modeB" value="b">
+      <label for="modeB" role="tab" aria-controls="panelB">時分 → 小数</label>
+    </div>
 
+    <section class="ck-card">
+      <div id="panelA" role="tabpanel" aria-labelledby="modeA">
+        <h2>小数時間 → 時間・分</h2>
         <div class="ck-row">
           <div class="ck-field">
             <label for="decHours">小数時間（例：6.3）</label>
-            <input id="decHours" inputmode="decimal" placeholder="例：6.3" autocomplete="off" />
+            <input id="decHours" class="ck-input-big" inputmode="decimal" placeholder="例：6.3" autocomplete="off" />
           </div>
 
           <div class="ck-field" style="min-width:220px;">
@@ -137,38 +162,38 @@
 
         <div class="ck-result" id="aResultBox" role="status" aria-live="polite">
           <div class="big" id="aBig">—</div>
-          <div class="small" id="aSmall">入力すると計算します</div>
+          <div class="small" id="aSmall">入力してください</div>
         </div>
+        <div class="ck-err" id="aErr" hidden></div>
 
         <div class="ck-actions">
-          <button class="ck-btn" id="aCopy" disabled>結果をコピー</button>
+          <button class="ck-btn" id="aCopy" disabled>コピー</button>
           <button class="ck-btn secondary" id="aClear">クリア</button>
         </div>
 
-        <div class="ck-chiprow" aria-label="クイック入力">
-          <button class="ck-chip" data-dec="6.25">6.25</button>
-          <button class="ck-chip" data-dec="7.5">7.5</button>
-          <button class="ck-chip" data-dec="0.1">0.1</button>
-          <button class="ck-chip" data-dec="0.75">0.75</button>
-          <button class="ck-chip" data-dec="1.2">1.2</button>
-          <button class="ck-chip" data-dec="8">8</button>
+        <div class="ck-quick">
+          <div class="ck-quick-title">よく使う例</div>
+          <div class="ck-chiprow" aria-label="クイック入力">
+            <button class="ck-chip" data-dec="6.25">6.25（6時間15分）</button>
+            <button class="ck-chip" data-dec="7.5">7.5（7時間30分）</button>
+            <button class="ck-chip" data-dec="0.1">0.1（6分）</button>
+            <button class="ck-chip" data-dec="0.75">0.75（45分）</button>
+            <button class="ck-chip" data-dec="1.2">1.2（1時間12分）</button>
+            <button class="ck-chip" data-dec="8">8（8時間）</button>
+          </div>
         </div>
+      </div>
 
-        <div class="ck-err" id="aErr" hidden></div>
-      </article>
-
-      <!-- Card B -->
-      <article class="ck-card" aria-labelledby="bTitle">
-        <h2 id="bTitle">時間・分 → 小数時間</h2>
-
+      <div id="panelB" role="tabpanel" aria-labelledby="modeB" hidden>
+        <h2>時間・分 → 小数時間</h2>
         <div class="ck-row">
           <div class="ck-field" style="min-width:140px;flex:0 0 140px;">
             <label for="hInt">時間（整数）</label>
-            <input id="hInt" inputmode="numeric" placeholder="例：6" autocomplete="off" />
+            <input id="hInt" class="ck-input-big" inputmode="numeric" placeholder="例：6" autocomplete="off" />
           </div>
           <div class="ck-field" style="min-width:140px;flex:0 0 140px;">
             <label for="mInt">分（0–59）</label>
-            <input id="mInt" inputmode="numeric" placeholder="例：18" autocomplete="off" />
+            <input id="mInt" class="ck-input-big" inputmode="numeric" placeholder="例：18" autocomplete="off" />
           </div>
 
           <div class="ck-field" style="min-width:260px;">
@@ -181,31 +206,30 @@
               <label for="fmt3">3桁</label>
 
               <input type="radio" name="decFmt" id="fmtRaw" value="raw">
-              <label for="fmtRaw">そのまま</label>
+              <label for="fmtRaw">自動</label>
             </div>
           </div>
         </div>
 
         <div class="ck-result" id="bResultBox" role="status" aria-live="polite">
           <div class="big" id="bBig">—</div>
-          <div class="small" id="bSmall">入力すると計算します</div>
+          <div class="small" id="bSmall">入力してください</div>
         </div>
+        <div class="ck-err" id="bErr" hidden></div>
 
         <div class="ck-actions">
-          <button class="ck-btn" id="bCopy" disabled>結果をコピー</button>
+          <button class="ck-btn" id="bCopy" disabled>コピー</button>
           <button class="ck-btn secondary" id="bClear">クリア</button>
         </div>
-
-        <div class="ck-err" id="bErr" hidden></div>
-      </article>
+      </div>
     </section>
 
     <details class="ck-details">
-      <summary>丸め・扱い（詳細）</summary>
+      <summary>表示・丸め（必要な人だけ）</summary>
       <div class="inner">
         <div class="ck-note" style="margin-top:0">
           小数→分は上の「小数→分 の丸め」を使用します。<br>
-          分→小数は「小数表示」の 2桁/3桁/そのまま を使用します（そのままは最大6桁で末尾0を省略）。
+          分→小数は「小数表示」の 2桁/3桁/自動 を使用します（自動は最大6桁で末尾0を省略）。
         </div>
         <div class="ck-note">
           <b>60分繰り上げ</b>：小数→分の結果が60分になった場合、時間を+1して0分にします。
@@ -229,9 +253,27 @@
       </div>
     </details>
 
-    <div class="ck-note">
-      よくある例：0.1時間=6分、0.25時間=15分、7時間30分=7.50時間（表示桁設定により変わる場合があります）
-    </div>
+    <section class="ck-faq" aria-labelledby="faqTitle">
+      <h2 id="faqTitle">よくある質問</h2>
+      <dl>
+        <div>
+          <dt>Q. 6.3時間は何時間何分ですか？</dt>
+          <dd>A. 6時間18分です。</dd>
+        </div>
+        <div>
+          <dt>Q. 0.1時間は何分ですか？</dt>
+          <dd>A. 6分です。</dd>
+        </div>
+        <div>
+          <dt>Q. 0.25時間は何分ですか？</dt>
+          <dd>A. 15分です。</dd>
+        </div>
+        <div>
+          <dt>Q. 7時間30分は小数時間でいくつですか？</dt>
+          <dd>A. 7.50時間です（表示設定で変わる場合があります）。</dd>
+        </div>
+      </dl>
+    </section>
   </main>
 
   <div class="ck-toast" id="toast">コピーしました</div>
@@ -330,8 +372,7 @@
       return trimZeros(s);
     }
   </script>
-<!-- PART 1/2: index.html（ここまで） -->
-<!-- PART 2/2: index.html（ここから） -->
+
   <script>
     // ===== Elements =====
     var decHours = $('decHours');
@@ -353,6 +394,9 @@
     var allowComma = $('allowComma');
     var denyExp = $('denyExp');
 
+    var panelA = $('panelA');
+    var panelB = $('panelB');
+
     var lastAResult = '';
     var lastBResult = '';
 
@@ -366,6 +410,17 @@
       }
     }
 
+    function setMode(mode){
+      var isA = mode === 'a';
+      panelA.hidden = !isA;
+      panelB.hidden = isA;
+      if (isA){
+        decHours.focus();
+      } else {
+        hInt.focus();
+      }
+    }
+
     // ===== A: decimal hours -> h m =====
     function computeA(){
       var allow = allowComma.value;
@@ -374,7 +429,7 @@
       var raw = normalizeDecimalInput(decHours.value, allow);
       if (!raw){
         aBig.textContent = '—';
-        aSmall.textContent = '入力すると計算します';
+        aSmall.textContent = '入力してください';
         setError(aErr, '');
         aCopy.disabled = true;
         lastAResult = '';
@@ -440,7 +495,7 @@
 
       if (!hs && !ms){
         bBig.textContent = '—';
-        bSmall.textContent = '入力すると計算します';
+        bSmall.textContent = '入力してください';
         setError(bErr, '');
         bCopy.disabled = true;
         lastBResult = '';
@@ -449,7 +504,7 @@
 
       if (!hs || !ms){
         bBig.textContent = '—';
-        bSmall.textContent = '時間と分を両方入力';
+        bSmall.textContent = '時間と分を入力';
         setError(bErr, '時間（整数）と分（0〜59）を両方入力してください。');
         bCopy.disabled = true;
         lastBResult = '';
@@ -515,6 +570,12 @@
     }
 
     // ===== Events =====
+    document.querySelectorAll('input[name="mode"]').forEach(function(radio){
+      radio.addEventListener('change', function(){
+        setMode(radio.value);
+      });
+    });
+
     decHours.addEventListener('input', computeA);
     roundDecToMin.addEventListener('change', computeA);
     allowComma.addEventListener('change', computeA);
@@ -558,7 +619,48 @@
     // Initial
     computeA();
     computeB();
+    setMode('a');
+  </script>
+
+  <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "FAQPage",
+      "mainEntity": [
+        {
+          "@type": "Question",
+          "name": "6.3時間は何時間何分ですか？",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "6時間18分です。"
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "0.1時間は何分ですか？",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "6分です。"
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "0.25時間は何分ですか？",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "15分です。"
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "7時間30分は小数時間でいくつですか？",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "7.50時間です（表示設定で変わる場合があります）。"
+          }
+        }
+      ]
+    }
   </script>
 </body>
 </html>
-<!-- PART 2/2: index.html（ここまで） -->
