@@ -101,6 +101,11 @@
       display:grid;
       grid-template-columns:repeat(4, minmax(64px, 1fr));
       gap:10px;
+      grid-template-areas:
+        "seven eight nine back"
+        "four five six clear"
+        "one two three swap"
+        "zero zero dot enter";
     }
     .ck-key{
       border:1px solid #cbd5e1;
@@ -114,6 +119,21 @@
     }
     .ck-key.action{background:#1e293b;color:#fff;border-color:#1e293b}
     .ck-key.wide{grid-column:span 2}
+    .ck-key[data-key="7"]{grid-area:seven}
+    .ck-key[data-key="8"]{grid-area:eight}
+    .ck-key[data-key="9"]{grid-area:nine}
+    .ck-key[data-key="back"]{grid-area:back}
+    .ck-key[data-key="4"]{grid-area:four}
+    .ck-key[data-key="5"]{grid-area:five}
+    .ck-key[data-key="6"]{grid-area:six}
+    .ck-key[data-key="clear"]{grid-area:clear}
+    .ck-key[data-key="1"]{grid-area:one}
+    .ck-key[data-key="2"]{grid-area:two}
+    .ck-key[data-key="3"]{grid-area:three}
+    .ck-key[data-key="swap"]{grid-area:swap}
+    .ck-key[data-key="0"]{grid-area:zero}
+    .ck-key[data-key="."]{grid-area:dot}
+    .ck-key[data-key="enter"]{grid-area:enter}
     details.ck-details{margin-top:16px}
     details.ck-details > summary{
       cursor:pointer;
@@ -149,8 +169,18 @@
       .ck-toggle{grid-template-columns:1fr}
       .ck-row{flex-direction:column;align-items:stretch}
       .ck-field{width:100%}
-      .ck-keypad-grid{grid-template-columns:repeat(3, minmax(64px, 1fr))}
-      .ck-key.wide{grid-column:span 1}
+      .ck-keypad-grid{
+        grid-template-columns:repeat(3, minmax(56px, 1fr));
+        gap:8px;
+        grid-template-areas:
+          "seven eight nine"
+          "four five six"
+          "one two three"
+          "zero dot enter"
+          "back clear swap";
+      }
+      .ck-key{padding:12px 6px;font-size:1rem}
+      .ck-key.wide{grid-column:auto}
     }
   </style>
 </head>
