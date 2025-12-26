@@ -40,6 +40,12 @@
       box-shadow:0 18px 30px rgba(15,23,42,.15);
     }
     .ck-card h2{margin:0 0 10px;font-size:1.05rem;color:#0f172a}
+    .ck-example{
+      margin:-4px 0 12px;
+      color:var(--muted,#6b7a8a);
+      font-size:.9rem;
+      font-weight:700;
+    }
     .ck-toggle{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin:10px 0 14px}
     .ck-toggle input{display:none}
     .ck-toggle label{
@@ -84,7 +90,11 @@
     }
     .ck-result .big{font-size:1.75rem;font-weight:900;letter-spacing:.4px}
     .ck-result .unit{font-size:1.1rem;font-weight:700;margin-left:4px}
-    .ck-result .small{margin-top:6px;color:rgba(226,232,240,.85);font-size:.9rem}
+    .ck-formula{
+      font-size:.92rem;
+      color:var(--muted,#6b7a8a);
+      margin-top:-4px;
+    }
     .ck-actions{display:flex;gap:10px;margin-top:10px;flex-wrap:wrap}
     .ck-btn{
       appearance:none;border:0;border-radius:14px;
@@ -99,13 +109,14 @@
     .ck-keypad-title{font-weight:800;margin:0 0 8px;font-size:.95rem;color:var(--muted,#6b7a8a)}
     .ck-keypad-grid{
       display:grid;
-      grid-template-columns:repeat(4, minmax(64px, 1fr));
+      grid-template-columns:repeat(3, minmax(64px, 1fr));
       gap:10px;
       grid-template-areas:
-        "seven eight nine back"
-        "four five six clear"
-        "one two three swap"
-        "zero zero dot enter";
+        "seven eight nine"
+        "four five six"
+        "one two three"
+        "clear zero dot"
+        "swap swap back";
     }
     .ck-key{
       border:1px solid #cbd5e1;
@@ -118,7 +129,6 @@
       cursor:pointer;
     }
     .ck-key.action{background:#1e293b;color:#fff;border-color:#1e293b}
-    .ck-key.wide{grid-column:span 2}
     .ck-key[data-key="7"]{grid-area:seven}
     .ck-key[data-key="8"]{grid-area:eight}
     .ck-key[data-key="9"]{grid-area:nine}
@@ -133,7 +143,6 @@
     .ck-key[data-key="swap"]{grid-area:swap}
     .ck-key[data-key="0"]{grid-area:zero}
     .ck-key[data-key="."]{grid-area:dot}
-    .ck-key[data-key="enter"]{grid-area:enter}
     details.ck-details{margin-top:16px}
     details.ck-details > summary{
       cursor:pointer;
@@ -176,11 +185,10 @@
           "seven eight nine"
           "four five six"
           "one two three"
-          "zero dot enter"
-          "back clear swap";
+          "clear zero dot"
+          "swap swap back";
       }
       .ck-key{padding:12px 6px;font-size:1rem}
-      .ck-key.wide{grid-column:auto}
     }
   </style>
 </head>
@@ -199,9 +207,10 @@
       <label for="modeB" role="tab" aria-controls="panelB">時分 → 小数</label>
     </div>
 
-    <section class="ck-card">
-      <div id="panelA" role="tabpanel" aria-labelledby="modeA">
+    <div id="panelA" role="tabpanel" aria-labelledby="modeA">
+      <section class="ck-card">
         <h2>小数時間 → 時間・分</h2>
+        <p class="ck-example">例：6.3時間→6時間18分</p>
         <div class="ck-row">
           <div class="ck-field">
             <label for="decHours">小数時間（例：6.3）</label>
@@ -220,18 +229,20 @@
 
         <div class="ck-result" id="aResultBox" role="status" aria-live="polite">
           <div class="big" id="aBig">—</div>
-          <div class="small" id="aSmall">入力してください</div>
         </div>
-        <div class="ck-err" id="aErr" hidden></div>
+      </section>
+      <div class="ck-formula" id="aSmall">入力してください</div>
+      <div class="ck-err" id="aErr" hidden></div>
 
-        <div class="ck-actions">
-          <button class="ck-btn" id="aCopy" disabled>コピー</button>
-          <button class="ck-btn secondary" id="aClear">クリア</button>
-        </div>
-
+      <div class="ck-actions">
+        <button class="ck-btn" id="aCopy" disabled>コピー</button>
+        <button class="ck-btn secondary" id="aClear">クリア</button>
       </div>
 
-      <div id="panelB" role="tabpanel" aria-labelledby="modeB" hidden>
+    </div>
+
+    <div id="panelB" role="tabpanel" aria-labelledby="modeB" hidden>
+      <section class="ck-card">
         <h2>時間・分 → 小数時間</h2>
         <div class="ck-row">
           <div class="ck-field" style="min-width:140px;flex:0 0 140px;">
@@ -260,37 +271,36 @@
 
         <div class="ck-result" id="bResultBox" role="status" aria-live="polite">
           <div class="big" id="bBig">—</div>
-          <div class="small" id="bSmall">入力してください</div>
         </div>
-        <div class="ck-err" id="bErr" hidden></div>
+      </section>
+      <div class="ck-formula" id="bSmall">入力してください</div>
+      <div class="ck-err" id="bErr" hidden></div>
 
-        <div class="ck-actions">
-          <button class="ck-btn" id="bCopy" disabled>コピー</button>
-          <button class="ck-btn secondary" id="bClear">クリア</button>
-        </div>
+      <div class="ck-actions">
+        <button class="ck-btn" id="bCopy" disabled>コピー</button>
+        <button class="ck-btn secondary" id="bClear">クリア</button>
       </div>
+    </div>
 
-      <div class="ck-keypad" aria-label="数字入力パッド">
-        <div class="ck-keypad-title">数字入力</div>
-        <div class="ck-keypad-grid">
-          <button class="ck-key" data-key="7">7</button>
-          <button class="ck-key" data-key="8">8</button>
-          <button class="ck-key" data-key="9">9</button>
-          <button class="ck-key action" data-key="back">⌫</button>
-          <button class="ck-key" data-key="4">4</button>
-          <button class="ck-key" data-key="5">5</button>
-          <button class="ck-key" data-key="6">6</button>
-          <button class="ck-key action" data-key="clear">AC</button>
-          <button class="ck-key" data-key="1">1</button>
-          <button class="ck-key" data-key="2">2</button>
-          <button class="ck-key" data-key="3">3</button>
-          <button class="ck-key action" data-key="swap">↔</button>
-          <button class="ck-key wide" data-key="0">0</button>
-          <button class="ck-key" data-key=".">.</button>
-          <button class="ck-key action" data-key="enter">入力</button>
-        </div>
+    <div class="ck-keypad" aria-label="数字入力パッド">
+      <div class="ck-keypad-title">数字入力</div>
+      <div class="ck-keypad-grid">
+        <button class="ck-key" data-key="7">7</button>
+        <button class="ck-key" data-key="8">8</button>
+        <button class="ck-key" data-key="9">9</button>
+        <button class="ck-key" data-key="4">4</button>
+        <button class="ck-key" data-key="5">5</button>
+        <button class="ck-key" data-key="6">6</button>
+        <button class="ck-key" data-key="1">1</button>
+        <button class="ck-key" data-key="2">2</button>
+        <button class="ck-key" data-key="3">3</button>
+        <button class="ck-key action" data-key="clear">AC</button>
+        <button class="ck-key" data-key="0">0</button>
+        <button class="ck-key" data-key=".">.</button>
+        <button class="ck-key action" data-key="swap">変換方向切替</button>
+        <button class="ck-key action" data-key="back">⌫</button>
       </div>
-    </section>
+    </div>
 
     <details class="ck-details">
       <summary>表示・丸め（必要な人だけ）</summary>
