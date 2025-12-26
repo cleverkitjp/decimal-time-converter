@@ -46,20 +46,6 @@
       font-size:.9rem;
       font-weight:700;
     }
-    .ck-toggle{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin:10px 0 14px}
-    .ck-toggle input{display:none}
-    .ck-toggle label{
-      border:1px solid #cbd5e1;
-      background:#fff;
-      border-radius:12px;
-      padding:12px 12px;
-      font-weight:800;
-      text-align:center;
-      font-size:.98rem;
-      cursor:pointer;
-      box-shadow:inset 0 -2px 0 rgba(15,23,42,.08);
-    }
-    .ck-toggle input:checked + label{border-color:#1f66c1;background:#e3efff;box-shadow:inset 0 -2px 0 rgba(31,102,193,.2)}
     .ck-row{display:flex;gap:12px;align-items:flex-end;flex-wrap:wrap}
     .ck-field{flex:1;min-width:0}
     .ck-field label{display:block;font-size:.85rem;color:var(--muted,#6b7a8a);margin:0 0 6px}
@@ -72,11 +58,19 @@
       background:#fff;
       box-sizing:border-box;
     }
-    .ck-input-big{
+    .ck-input-display{
+      width:100%;
+      padding:14px 14px;
+      border:1px solid #cbd5e1;
+      border-radius:14px;
       font-size:1.35rem;
-      height:56px;
       font-weight:800;
       letter-spacing:.3px;
+      background:#fff;
+      box-sizing:border-box;
+      min-height:56px;
+      display:flex;
+      align-items:center;
     }
     .ck-field input:focus, .ck-field select:focus{outline:3px solid rgba(31,102,193,.25);outline-offset:2px}
     .ck-result{
@@ -116,7 +110,7 @@
         "four five six"
         "one two three"
         "clear zero dot"
-        "swap swap back";
+        "back back back";
     }
     .ck-key{
       border:1px solid #cbd5e1;
@@ -140,21 +134,8 @@
     .ck-key[data-key="1"]{grid-area:one}
     .ck-key[data-key="2"]{grid-area:two}
     .ck-key[data-key="3"]{grid-area:three}
-    .ck-key[data-key="swap"]{grid-area:swap}
     .ck-key[data-key="0"]{grid-area:zero}
     .ck-key[data-key="."]{grid-area:dot}
-    details.ck-details{margin-top:16px}
-    details.ck-details > summary{
-      cursor:pointer;
-      font-weight:800;
-      list-style:none;
-      padding:10px 12px;
-      border-radius:14px;
-      border:1px solid var(--line,#e8edf3);
-      background:#fff;
-    }
-    details.ck-details[open] > summary{background:rgba(255,138,0,.08);border-color:rgba(255,138,0,.35)}
-    details.ck-details .inner{margin-top:10px;padding:12px;border-radius:16px;border:1px solid var(--line,#e8edf3);background:#fff}
     .ck-seg{display:flex;gap:8px;flex-wrap:wrap}
     .ck-seg input{display:none}
     .ck-seg label{
@@ -164,7 +145,6 @@
       box-shadow:inset 0 -2px 0 rgba(15,23,42,.08);
     }
     .ck-seg input:checked + label{border-color:#1f66c1;background:#e3efff}
-    .ck-note{margin-top:12px;color:var(--muted,#6b7a8a);font-size:.92rem;line-height:1.45}
     .ck-toast{
       position:fixed;left:50%;bottom:16px;transform:translateX(-50%);
       background:#111827;color:#fff;
@@ -175,7 +155,6 @@
     }
     .ck-toast.show{opacity:.95}
     @media (max-width:720px){
-      .ck-toggle{grid-template-columns:1fr}
       .ck-row{flex-direction:column;align-items:stretch}
       .ck-field{width:100%}
       .ck-keypad-grid{
@@ -186,7 +165,7 @@
           "four five six"
           "one two three"
           "clear zero dot"
-          "swap swap back";
+          "back back back";
       }
       .ck-key{padding:12px 6px;font-size:1rem}
     }
@@ -200,30 +179,26 @@
       6.3時間は何時間何分かをすぐ確認できる小数時間の変換ツールです。時間・分から小数時間への変換や何分換算にも対応し、無料・スマホ対応で使えます。
     </p>
 
-    <div class="ck-toggle" role="tablist" aria-label="変換方向">
-      <input type="radio" name="mode" id="modeA" value="a" checked>
-      <label for="modeA" role="tab" aria-controls="panelA">小数 → 時分</label>
-      <input type="radio" name="mode" id="modeB" value="b">
-      <label for="modeB" role="tab" aria-controls="panelB">時分 → 小数</label>
-    </div>
-
-    <div id="panelA" role="tabpanel" aria-labelledby="modeA">
+    <div id="panelA">
       <section class="ck-card">
         <h2>小数時間 → 時間・分</h2>
-        <p class="ck-example">例：6.3時間→6時間18分</p>
-        <div class="ck-row">
-          <div class="ck-field">
-            <label for="decHours">小数時間（例：6.3）</label>
-            <input id="decHours" class="ck-input-big" inputmode="none" placeholder="例：6.3" autocomplete="off" />
-          </div>
+        <div class="ck-input-display" id="decDisplay" aria-label="小数時間の入力">—</div>
+        <div class="ck-row" style="margin-top:12px">
+          <div class="ck-field" style="min-width:260px;">
+            <label>小数表示</label>
+            <div class="ck-seg" role="radiogroup" aria-label="小数表示の桁数">
+              <input type="radio" name="decFmt" id="fmtRaw" value="raw" checked>
+              <label for="fmtRaw">自動</label>
 
-          <div class="ck-field" style="min-width:220px;">
-            <label for="roundDecToMin">小数→分 の丸め</label>
-            <select id="roundDecToMin">
-              <option value="floor">切り捨て</option>
-              <option value="round" selected>四捨五入</option>
-              <option value="ceil">切り上げ</option>
-            </select>
+              <input type="radio" name="decFmt" id="fmt1" value="1">
+              <label for="fmt1">1桁</label>
+
+              <input type="radio" name="decFmt" id="fmt2" value="2">
+              <label for="fmt2">2桁</label>
+
+              <input type="radio" name="decFmt" id="fmt3" value="3">
+              <label for="fmt3">3桁</label>
+            </div>
           </div>
         </div>
 
@@ -241,47 +216,6 @@
 
     </div>
 
-    <div id="panelB" role="tabpanel" aria-labelledby="modeB" hidden>
-      <section class="ck-card">
-        <h2>時間・分 → 小数時間</h2>
-        <div class="ck-row">
-          <div class="ck-field" style="min-width:140px;flex:0 0 140px;">
-            <label for="hInt">時間（整数）</label>
-            <input id="hInt" class="ck-input-big" inputmode="none" placeholder="例：6" autocomplete="off" />
-          </div>
-          <div class="ck-field" style="min-width:140px;flex:0 0 140px;">
-            <label for="mInt">分（0–59）</label>
-            <input id="mInt" class="ck-input-big" inputmode="none" placeholder="例：18" autocomplete="off" />
-          </div>
-
-          <div class="ck-field" style="min-width:260px;">
-            <label>小数表示</label>
-            <div class="ck-seg" role="radiogroup" aria-label="小数表示の桁数">
-              <input type="radio" name="decFmt" id="fmt2" value="2" checked>
-              <label for="fmt2">2桁</label>
-
-              <input type="radio" name="decFmt" id="fmt3" value="3">
-              <label for="fmt3">3桁</label>
-
-              <input type="radio" name="decFmt" id="fmtRaw" value="raw">
-              <label for="fmtRaw">自動</label>
-            </div>
-          </div>
-        </div>
-
-        <div class="ck-result" id="bResultBox" role="status" aria-live="polite">
-          <div class="big" id="bBig">—</div>
-        </div>
-      </section>
-      <div class="ck-formula" id="bSmall">入力してください</div>
-      <div class="ck-err" id="bErr" hidden></div>
-
-      <div class="ck-actions">
-        <button class="ck-btn" id="bCopy" disabled>コピー</button>
-        <button class="ck-btn secondary" id="bClear">クリア</button>
-      </div>
-    </div>
-
     <div class="ck-keypad" aria-label="数字入力パッド">
       <div class="ck-keypad-title">数字入力</div>
       <div class="ck-keypad-grid">
@@ -297,39 +231,9 @@
         <button class="ck-key action" data-key="clear">AC</button>
         <button class="ck-key" data-key="0">0</button>
         <button class="ck-key" data-key=".">.</button>
-        <button class="ck-key action" data-key="swap">変換方向切替</button>
         <button class="ck-key action" data-key="back">⌫</button>
       </div>
     </div>
-
-    <details class="ck-details">
-      <summary>表示・丸め（必要な人だけ）</summary>
-      <div class="inner">
-        <div class="ck-note" style="margin-top:0">
-          小数→分は上の「小数→分 の丸め」を使用します。<br>
-          分→小数は「小数表示」の 2桁/3桁/自動 を使用します（自動は最大6桁で末尾0を省略）。
-        </div>
-        <div class="ck-note">
-          <b>60分繰り上げ</b>：小数→分の結果が60分になった場合、時間を+1して0分にします。
-        </div>
-        <div class="ck-row" style="margin-top:10px">
-          <div class="ck-field" style="min-width:240px;">
-            <label for="allowComma">6,3 のようなカンマ小数</label>
-            <select id="allowComma">
-              <option value="yes" selected>許可（6,3 → 6.3）</option>
-              <option value="no">許可しない</option>
-            </select>
-          </div>
-          <div class="ck-field" style="min-width:240px;">
-            <label for="denyExp">指数表記（1e2 など）</label>
-            <select id="denyExp">
-              <option value="yes" selected>無効にする（推奨）</option>
-              <option value="no">許可する</option>
-            </select>
-          </div>
-        </div>
-      </div>
-    </details>
 
   </main>
 
@@ -393,29 +297,6 @@
       });
     }
 
-    function isIntegerString(s){
-      return /^[0-9]+$/.test(s);
-    }
-
-    function normalizeDecimalInput(raw, allowComma){
-      if (raw == null) return '';
-      var s = String(raw).trim();
-      if (!s) return '';
-      if (allowComma === 'yes') s = s.replace(',', '.');
-      return s;
-    }
-
-    function denyExponentIfNeeded(s, denyExp){
-      if (denyExp === 'yes' && /e/i.test(s)) return true;
-      return false;
-    }
-
-    function roundByMode(x, mode){
-      if (mode === 'floor') return Math.floor(x);
-      if (mode === 'ceil') return Math.ceil(x);
-      return Math.round(x); // default: round
-    }
-
     function trimZeros(numStr){
       // "6.500000" -> "6.5", "6.000" -> "6"
       if (!numStr.includes('.')) return numStr;
@@ -423,39 +304,31 @@
       return numStr;
     }
 
-    function formatRawDecimal(x){
-      // up to 6 decimals, then trim zeros
-      var s = x.toFixed(6);
-      return trimZeros(s);
+    function formatDecimalDisplay(raw, fmt){
+      if (!raw) return '—';
+      if (raw.endsWith('.')) return raw;
+      var x = Number(raw);
+      if (!Number.isFinite(x)) return raw;
+      if (fmt === 'raw'){
+        return trimZeros(x.toFixed(6));
+      }
+      var digits = Number(fmt);
+      if (!Number.isFinite(digits)) return raw;
+      return x.toFixed(digits);
     }
   </script>
 
   <script>
     // ===== Elements =====
-    var decHours = $('decHours');
-    var roundDecToMin = $('roundDecToMin');
+    var decDisplay = $('decDisplay');
     var aBig = $('aBig');
     var aSmall = $('aSmall');
     var aErr = $('aErr');
     var aCopy = $('aCopy');
     var aClear = $('aClear');
 
-    var hInt = $('hInt');
-    var mInt = $('mInt');
-    var bBig = $('bBig');
-    var bSmall = $('bSmall');
-    var bErr = $('bErr');
-    var bCopy = $('bCopy');
-    var bClear = $('bClear');
-
-    var allowComma = $('allowComma');
-    var denyExp = $('denyExp');
-
-    var panelA = $('panelA');
-    var panelB = $('panelB');
-
     var lastAResult = '';
-    var lastBResult = '';
+    var decInput = '';
 
     function setError(el, msg){
       if (msg){
@@ -467,36 +340,15 @@
       }
     }
 
-    function setMode(mode){
-      var isA = mode === 'a';
-      panelA.hidden = !isA;
-      panelB.hidden = isA;
-      if (isA){
-        decHours.focus();
-      } else {
-        hInt.focus();
-      }
-    }
-
     // ===== A: decimal hours -> h m =====
     function computeA(){
-      var allow = allowComma.value;
-      var deny = denyExp.value;
-
-      var raw = normalizeDecimalInput(decHours.value, allow);
+      var raw = decInput;
+      var fmt = document.querySelector('input[name="decFmt"]:checked')?.value || 'raw';
+      decDisplay.textContent = formatDecimalDisplay(raw, fmt);
       if (!raw){
         aBig.textContent = '—';
         aSmall.textContent = '入力してください';
         setError(aErr, '');
-        aCopy.disabled = true;
-        lastAResult = '';
-        return;
-      }
-
-      if (denyExponentIfNeeded(raw, deny)){
-        aBig.textContent = '—';
-        aSmall.textContent = '指数表記は無効です';
-        setError(aErr, '指数表記（1e2 など）は無効です。通常の数値（例：6.3）で入力してください。');
         aCopy.disabled = true;
         lastAResult = '';
         return;
@@ -527,8 +379,7 @@
       var rawMinutes = frac * 60;
       rawMinutes = Math.round(rawMinutes * 1e9) / 1e9;
 
-      var mode = roundDecToMin.value;
-      var minutes = roundByMode(rawMinutes, mode);
+      var minutes = Math.round(rawMinutes);
 
       // 60-min carry
       if (minutes === 60){
@@ -545,173 +396,43 @@
       aCopy.disabled = false;
     }
 
-    // ===== B: h m -> decimal hours =====
-    function computeB(){
-      var hs = String(hInt.value || '').trim();
-      var ms = String(mInt.value || '').trim();
-
-      if (!hs && !ms){
-        bBig.textContent = '—';
-        bSmall.textContent = '入力してください';
-        setError(bErr, '');
-        bCopy.disabled = true;
-        lastBResult = '';
-        return;
-      }
-
-      if (!hs || !ms){
-        bBig.textContent = '—';
-        bSmall.textContent = '時間と分を入力';
-        setError(bErr, '時間（整数）と分（0〜59）を両方入力してください。');
-        bCopy.disabled = true;
-        lastBResult = '';
-        return;
-      }
-
-      if (!isIntegerString(hs)){
-        bBig.textContent = '—';
-        bSmall.textContent = '時間は整数';
-        setError(bErr, '時間は0以上の整数で入力してください。');
-        bCopy.disabled = true;
-        lastBResult = '';
-        return;
-      }
-      if (!isIntegerString(ms)){
-        bBig.textContent = '—';
-        bSmall.textContent = '分は整数';
-        setError(bErr, '分は0〜59の整数で入力してください。');
-        bCopy.disabled = true;
-        lastBResult = '';
-        return;
-      }
-
-      var h = parseInt(hs, 10);
-      var m = parseInt(ms, 10);
-
-      if (h < 0){
-        bBig.textContent = '—';
-        bSmall.textContent = '負の数は不可';
-        setError(bErr, '負の時間は入力できません。');
-        bCopy.disabled = true;
-        lastBResult = '';
-        return;
-      }
-      if (m < 0 || m > 59){
-        bBig.textContent = '—';
-        bSmall.textContent = '分は0〜59';
-        setError(bErr, '分は0〜59の範囲で入力してください（60は不可）。');
-        bCopy.disabled = true;
-        lastBResult = '';
-        return;
-      }
-
-      var x = h + (m / 60);
-
-      var fmt = document.querySelector('input[name="decFmt"]:checked')?.value || '2';
-      var outNum;
-      if (fmt === '3'){
-        outNum = x.toFixed(3);
-      }else if (fmt === 'raw'){
-        outNum = formatRawDecimal(x);
-      }else{
-        outNum = x.toFixed(2);
-      }
-
-      var out = outNum + '時間';
-      lastBResult = out;
-
-      bBig.textContent = outNum + ' 時間';
-      bSmall.textContent = h + 'h + ' + m + 'min ÷ 60 = ' + x;
-      setError(bErr, '');
-      bCopy.disabled = false;
-    }
-
     // ===== Events =====
-    document.querySelectorAll('input[name="mode"]').forEach(function(radio){
-      radio.addEventListener('change', function(){
-        setMode(radio.value);
-      });
-    });
-
-    decHours.addEventListener('input', computeA);
-    roundDecToMin.addEventListener('change', computeA);
-    allowComma.addEventListener('change', computeA);
-    denyExp.addEventListener('change', computeA);
-
-    hInt.addEventListener('input', computeB);
-    mInt.addEventListener('input', computeB);
-    document.querySelectorAll('input[name="decFmt"]').forEach(function(r){
-      r.addEventListener('change', computeB);
-    });
-
     aCopy.addEventListener('click', function(){
       copyText(lastAResult).then(function(){ showToast('コピーしました'); })
         .catch(function(){ showToast('コピーに失敗しました'); });
     });
-    bCopy.addEventListener('click', function(){
-      copyText(lastBResult).then(function(){ showToast('コピーしました'); })
-        .catch(function(){ showToast('コピーに失敗しました'); });
-    });
 
     aClear.addEventListener('click', function(){
-      decHours.value = '';
+      decInput = '';
       computeA();
-      decHours.focus();
-    });
-    bClear.addEventListener('click', function(){
-      hInt.value = '';
-      mInt.value = '';
-      computeB();
-      hInt.focus();
     });
 
-    function getActiveInput(){
-      var active = document.activeElement;
-      if (active === decHours || active === hInt || active === mInt){
-        return active;
-      }
-      if (!panelA.hidden){
-        return decHours;
-      }
-      return hInt;
-    }
-
-    function applyKey(input, key){
-      if (key === 'swap'){
-        var nextMode = panelA.hidden ? 'a' : 'b';
-        document.getElementById('mode' + nextMode.toUpperCase()).checked = true;
-        setMode(nextMode);
-        return;
-      }
+    function applyKey(key){
       if (key === 'clear'){
-        input.value = '';
+        decInput = '';
       }else if (key === 'back'){
-        input.value = input.value.slice(0, -1);
-      }else if (key === 'enter'){
-        input.blur();
+        decInput = decInput.slice(0, -1);
+      }else if (key === '.'){
+        if (decInput.includes('.')) return;
+        decInput = decInput ? decInput + key : '0.';
       }else{
-        input.value = input.value + key;
+        decInput = decInput + key;
       }
-      if (input === decHours){
-        computeA();
-      }else{
-        computeB();
-      }
-      input.focus();
+      computeA();
     }
 
     document.querySelectorAll('.ck-keypad [data-key]').forEach(function(btn){
       btn.addEventListener('click', function(){
         var key = btn.getAttribute('data-key');
-        var input = getActiveInput();
-        applyKey(input, key);
+        applyKey(key);
       });
+    });
+    document.querySelectorAll('input[name="decFmt"]').forEach(function(radio){
+      radio.addEventListener('change', computeA);
     });
 
     // Initial
     computeA();
-    computeB();
-    setMode('a');
   </script>
 
 </body>
