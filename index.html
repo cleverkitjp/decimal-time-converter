@@ -39,7 +39,15 @@
       padding:18px;
       box-shadow:0 18px 30px rgba(15,23,42,.15);
     }
-    .ck-card h2{margin:0 0 10px;font-size:1.05rem;color:#0f172a}
+    .ck-card-header{
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:12px;
+      flex-wrap:wrap;
+    }
+    .ck-card-header h2{margin:0;font-size:1.05rem;color:#0f172a}
+    .ck-card > h2{margin:0 0 10px;font-size:1.05rem;color:#0f172a}
     .ck-example{
       margin:-4px 0 12px;
       color:var(--muted,#6b7a8a);
@@ -122,6 +130,7 @@
       box-shadow:inset 0 -2px 0 rgba(15,23,42,.08);
       cursor:pointer;
     }
+    .ck-key:disabled{cursor:not-allowed;opacity:.45}
     .ck-key.action{background:#1e293b;color:#fff;border-color:#1e293b}
     .ck-key[data-key="7"]{grid-area:seven}
     .ck-key[data-key="8"]{grid-area:eight}
@@ -181,7 +190,10 @@
 
     <div id="panelA">
       <section class="ck-card">
-        <h2>小数時間 → 時間・分</h2>
+        <div class="ck-card-header">
+          <h2>小数時間 → 時間・分</h2>
+          <button class="ck-btn secondary" id="toggleMode">変換方向切替</button>
+        </div>
         <div class="ck-input-display" id="decDisplay" aria-label="小数時間の入力">—</div>
         <div class="ck-row" style="margin-top:12px">
           <div class="ck-field" style="min-width:260px;">
@@ -216,6 +228,28 @@
 
     </div>
 
+    <div id="panelB" hidden>
+      <section class="ck-card">
+        <div class="ck-card-header">
+          <h2>時間・分 → 小数時間</h2>
+          <button class="ck-btn secondary" id="toggleModeB">変換方向切替</button>
+        </div>
+        <div class="ck-input-display" id="timeDisplay" aria-label="時間分の入力">—</div>
+
+        <div class="ck-result" id="bResultBox" role="status" aria-live="polite">
+          <div class="big" id="bBig">—</div>
+        </div>
+      </section>
+      <div class="ck-formula" id="bSmall">入力してください</div>
+      <div class="ck-err" id="bErr" hidden></div>
+
+      <div class="ck-actions">
+        <button class="ck-btn" id="bNext" hidden>次へ</button>
+        <button class="ck-btn" id="bCopy" disabled>コピー</button>
+        <button class="ck-btn secondary" id="bClear">クリア</button>
+      </div>
+    </div>
+
     <div class="ck-keypad" aria-label="数字入力パッド">
       <div class="ck-keypad-title">数字入力</div>
       <div class="ck-keypad-grid">
@@ -230,7 +264,7 @@
         <button class="ck-key" data-key="3">3</button>
         <button class="ck-key action" data-key="clear">AC</button>
         <button class="ck-key" data-key="0">0</button>
-        <button class="ck-key" data-key=".">.</button>
+        <button class="ck-key" data-key="." id="dotKey">.</button>
         <button class="ck-key action" data-key="back">⌫</button>
       </div>
     </div>
@@ -326,9 +360,28 @@
     var aErr = $('aErr');
     var aCopy = $('aCopy');
     var aClear = $('aClear');
+    var panelA = $('panelA');
+    var panelB = $('panelB');
+    var toggleMode = $('toggleMode');
+    var toggleModeB = $('toggleModeB');
+    var dotKey = $('dotKey');
+
+    var timeDisplay = $('timeDisplay');
+    var bBig = $('bBig');
+    var bSmall = $('bSmall');
+    var bErr = $('bErr');
+    var bCopy = $('bCopy');
+    var bClear = $('bClear');
+    var bNext = $('bNext');
 
     var lastAResult = '';
     var decInput = '';
+    var mode = 'A';
+
+    var lastBResult = '';
+    var bHourInput = '';
+    var bMinInput = '';
+    var bStep = 'hour';
 
     function setError(el, msg){
       if (msg){
@@ -337,6 +390,19 @@
       }else{
         el.hidden = true;
         el.textContent = '';
+      }
+    }
+
+    function setMode(next){
+      mode = next;
+      var isB = mode === 'B';
+      panelA.hidden = isB;
+      panelB.hidden = !isB;
+      if (dotKey) dotKey.disabled = isB;
+      if (isB){
+        computeB();
+      }else{
+        computeA();
       }
     }
 
@@ -396,6 +462,73 @@
       aCopy.disabled = false;
     }
 
+    // ===== B: h m -> decimal hours =====
+    function updateTimeDisplay(){
+      var h = bHourInput || '—';
+      var m = (bStep === 'minute' || bMinInput) ? (bMinInput || '—') : '—';
+      timeDisplay.textContent = h + '時間' + m + '分';
+    }
+
+    function computeB(){
+      updateTimeDisplay();
+      setError(bErr, '');
+      bCopy.disabled = true;
+      lastBResult = '';
+
+      if (!bHourInput){
+        bBig.textContent = '—';
+        bSmall.textContent = '時を入力してください';
+        bNext.hidden = true;
+        return;
+      }
+
+      if (bStep === 'hour'){
+        bBig.textContent = '—';
+        bSmall.textContent = '「次へ」で分を入力します';
+        bNext.hidden = false;
+        return;
+      }
+
+      bNext.hidden = true;
+
+      if (!bMinInput){
+        bBig.textContent = '—';
+        bSmall.textContent = '分を入力してください';
+        return;
+      }
+
+      var hours = Number(bHourInput);
+      var minutes = Number(bMinInput);
+
+      if (!Number.isFinite(hours) || !Number.isFinite(minutes)){
+        bBig.textContent = '—';
+        bSmall.textContent = '数値として解釈できません';
+        setError(bErr, '時間・分は数値で入力してください。');
+        return;
+      }
+      if (hours < 0 || minutes < 0){
+        bBig.textContent = '—';
+        bSmall.textContent = '負の数は不可';
+        setError(bErr, '負の時間・分は入力できません。');
+        return;
+      }
+      if (minutes >= 60){
+        bBig.textContent = '—';
+        bSmall.textContent = '分は0〜59で入力してください';
+        setError(bErr, '分は0〜59の範囲で入力してください。');
+        return;
+      }
+
+      var dec = hours + minutes / 60;
+      var fmt = document.querySelector('input[name="decFmt"]:checked')?.value || 'raw';
+      var decText = formatDecimalDisplay(String(dec), fmt);
+
+      bBig.textContent = decText + '時間';
+      bSmall.textContent = hours + 'h + ' + minutes + 'min ÷ 60 = ' + trimZeros((minutes / 60).toFixed(6)) + 'h';
+      lastBResult = decText + '時間';
+      bCopy.disabled = false;
+    }
+
     // ===== Events =====
     aCopy.addEventListener('click', function(){
       copyText(lastAResult).then(function(){ showToast('コピーしました'); })
@@ -408,17 +541,44 @@
     });
 
     function applyKey(key){
-      if (key === 'clear'){
-        decInput = '';
-      }else if (key === 'back'){
-        decInput = decInput.slice(0, -1);
-      }else if (key === '.'){
-        if (decInput.includes('.')) return;
-        decInput = decInput ? decInput + key : '0.';
+      if (mode === 'B'){
+        if (key === 'clear'){
+          bHourInput = '';
+          bMinInput = '';
+          bStep = 'hour';
+        }else if (key === 'back'){
+          if (bStep === 'minute'){
+            if (bMinInput){
+              bMinInput = bMinInput.slice(0, -1);
+            }else{
+              bStep = 'hour';
+            }
+          }else{
+            bHourInput = bHourInput.slice(0, -1);
+          }
+        }else if (key === '.'){
+          return;
+        }else{
+          if (bStep === 'hour'){
+            bHourInput = bHourInput + key;
+          }else{
+            bMinInput = bMinInput + key;
+          }
+        }
+        computeB();
       }else{
-        decInput = decInput + key;
+        if (key === 'clear'){
+          decInput = '';
+        }else if (key === 'back'){
+          decInput = decInput.slice(0, -1);
+        }else if (key === '.'){
+          if (decInput.includes('.')) return;
+          decInput = decInput ? decInput + key : '0.';
+        }else{
+          decInput = decInput + key;
+        }
+        computeA();
       }
-      computeA();
     }
 
     document.querySelectorAll('.ck-keypad [data-key]').forEach(function(btn){
@@ -428,7 +588,38 @@
       });
     });
     document.querySelectorAll('input[name="decFmt"]').forEach(function(radio){
-      radio.addEventListener('change', computeA);
+      radio.addEventListener('change', function(){
+        if (mode === 'B'){
+          computeB();
+        }else{
+          computeA();
+        }
+      });
+    });
+
+    toggleMode.addEventListener('click', function(){
+      setMode('B');
+    });
+    toggleModeB.addEventListener('click', function(){
+      setMode('A');
+    });
+
+    bNext.addEventListener('click', function(){
+      if (!bHourInput) return;
+      bStep = 'minute';
+      computeB();
+    });
+
+    bCopy.addEventListener('click', function(){
+      copyText(lastBResult).then(function(){ showToast('コピーしました'); })
+        .catch(function(){ showToast('コピーに失敗しました'); });
+    });
+
+    bClear.addEventListener('click', function(){
+      bHourInput = '';
+      bMinInput = '';
+      bStep = 'hour';
+      computeB();
     });
 
     // Initial
