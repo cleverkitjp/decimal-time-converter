@@ -32,40 +32,59 @@
     .ck-wrap{max-width:920px;margin:0 auto;padding:16px}
     .ck-title{margin:6px 0 6px;font-size:1.5rem;line-height:1.25}
     .ck-lead{margin:0 0 16px;color:var(--muted,#6b7a8a);font-size:.98rem;line-height:1.55}
-    .ck-card{background:var(--card,#fff);border:1px solid var(--line,#e8edf3);border-radius:20px;padding:16px;box-shadow:var(--shadow,0 10px 22px rgba(20,40,80,.12))}
-    .ck-card h2{margin:0 0 10px;font-size:1.05rem}
+    .ck-card{
+      background:linear-gradient(180deg, #f8fafc 0%, #eef2f7 100%);
+      border:1px solid var(--line,#d7dfea);
+      border-radius:24px;
+      padding:18px;
+      box-shadow:0 18px 30px rgba(15,23,42,.15);
+    }
+    .ck-card h2{margin:0 0 10px;font-size:1.05rem;color:#0f172a}
     .ck-toggle{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin:10px 0 14px}
     .ck-toggle input{display:none}
     .ck-toggle label{
-      border:1px solid var(--line,#e8edf3);
-      background:#fff;border-radius:999px;
-      padding:10px 12px;font-weight:800;text-align:center;
-      font-size:.98rem;cursor:pointer;
+      border:1px solid #cbd5e1;
+      background:#fff;
+      border-radius:12px;
+      padding:12px 12px;
+      font-weight:800;
+      text-align:center;
+      font-size:.98rem;
+      cursor:pointer;
+      box-shadow:inset 0 -2px 0 rgba(15,23,42,.08);
     }
-    .ck-toggle input:checked + label{border-color:rgba(31,102,193,.45);background:rgba(31,102,193,.1)}
+    .ck-toggle input:checked + label{border-color:#1f66c1;background:#e3efff;box-shadow:inset 0 -2px 0 rgba(31,102,193,.2)}
     .ck-row{display:flex;gap:12px;align-items:flex-end;flex-wrap:wrap}
-    .ck-field{flex:1;min-width:160px}
+    .ck-field{flex:1;min-width:0}
     .ck-field label{display:block;font-size:.85rem;color:var(--muted,#6b7a8a);margin:0 0 6px}
     .ck-field input, .ck-field select{
       width:100%;
       padding:14px 14px;
-      border:1px solid var(--line,#e8edf3);
-      border-radius:16px;
+      border:1px solid #cbd5e1;
+      border-radius:14px;
       font-size:1.05rem;
       background:#fff;
+      box-sizing:border-box;
     }
-    .ck-input-big{font-size:1.25rem;height:52px}
-    .ck-field input:focus, .ck-field select:focus{outline:2px solid rgba(31,102,193,.25);outline-offset:2px}
+    .ck-input-big{
+      font-size:1.35rem;
+      height:56px;
+      font-weight:800;
+      letter-spacing:.3px;
+    }
+    .ck-field input:focus, .ck-field select:focus{outline:3px solid rgba(31,102,193,.25);outline-offset:2px}
     .ck-result{
       margin-top:12px;
-      padding:14px;
-      border-radius:18px;
-      background:rgba(31,102,193,.06);
-      border:1px dashed rgba(31,102,193,.25);
+      padding:16px;
+      border-radius:20px;
+      background:#0f172a;
+      color:#fff;
+      border:1px solid rgba(15,23,42,.7);
+      box-shadow:inset 0 0 0 1px rgba(255,255,255,.05);
     }
-    .ck-result .big{font-size:1.6rem;font-weight:800;letter-spacing:.2px}
+    .ck-result .big{font-size:1.75rem;font-weight:900;letter-spacing:.4px}
     .ck-result .unit{font-size:1.1rem;font-weight:700;margin-left:4px}
-    .ck-result .small{margin-top:6px;color:var(--muted,#6b7a8a);font-size:.9rem}
+    .ck-result .small{margin-top:6px;color:rgba(226,232,240,.85);font-size:.9rem}
     .ck-actions{display:flex;gap:10px;margin-top:10px;flex-wrap:wrap}
     .ck-btn{
       appearance:none;border:0;border-radius:14px;
@@ -74,21 +93,27 @@
       box-shadow:var(--shadow-press,0 4px 10px rgba(20,40,80,.18));
     }
     .ck-btn:disabled{opacity:.45}
-    .ck-btn.secondary{background:#203246}
+    .ck-btn.secondary{background:#1e293b}
     .ck-err{margin-top:8px;color:#b42318;font-weight:700;font-size:.92rem}
-    .ck-quick{margin-top:12px}
-    .ck-quick-title{font-weight:800;margin:0 0 8px;font-size:.95rem;color:var(--muted,#6b7a8a)}
-    .ck-chiprow{display:flex;gap:8px;overflow-x:auto;padding-bottom:4px;scroll-snap-type:x mandatory}
-    .ck-chip{
-      border:1px solid var(--line,#e8edf3);
-      background:#fff;
-      border-radius:999px;
-      padding:8px 12px;
-      font-weight:800;
-      font-size:.95rem;
-      white-space:nowrap;
-      scroll-snap-align:start;
+    .ck-keypad{margin-top:16px}
+    .ck-keypad-title{font-weight:800;margin:0 0 8px;font-size:.95rem;color:var(--muted,#6b7a8a)}
+    .ck-keypad-grid{
+      display:grid;
+      grid-template-columns:repeat(4, minmax(64px, 1fr));
+      gap:10px;
     }
+    .ck-key{
+      border:1px solid #cbd5e1;
+      background:#fff;
+      border-radius:14px;
+      padding:14px 8px;
+      font-weight:900;
+      font-size:1.1rem;
+      box-shadow:inset 0 -2px 0 rgba(15,23,42,.08);
+      cursor:pointer;
+    }
+    .ck-key.action{background:#1e293b;color:#fff;border-color:#1e293b}
+    .ck-key.wide{grid-column:span 2}
     details.ck-details{margin-top:16px}
     details.ck-details > summary{
       cursor:pointer;
@@ -104,17 +129,13 @@
     .ck-seg{display:flex;gap:8px;flex-wrap:wrap}
     .ck-seg input{display:none}
     .ck-seg label{
-      border:1px solid var(--line,#e8edf3);
-      background:#fff;border-radius:999px;
-      padding:8px 10px;font-weight:800;font-size:.95rem;
+      border:1px solid #cbd5e1;
+      background:#fff;border-radius:10px;
+      padding:8px 12px;font-weight:800;font-size:.95rem;
+      box-shadow:inset 0 -2px 0 rgba(15,23,42,.08);
     }
-    .ck-seg input:checked + label{border-color:rgba(31,102,193,.45);background:rgba(31,102,193,.08)}
+    .ck-seg input:checked + label{border-color:#1f66c1;background:#e3efff}
     .ck-note{margin-top:12px;color:var(--muted,#6b7a8a);font-size:.92rem;line-height:1.45}
-    .ck-faq{margin-top:22px}
-    .ck-faq h2{font-size:1.15rem;margin:0 0 10px}
-    .ck-faq dl{margin:0;display:grid;gap:10px}
-    .ck-faq dt{font-weight:800}
-    .ck-faq dd{margin:4px 0 0;color:var(--muted,#6b7a8a)}
     .ck-toast{
       position:fixed;left:50%;bottom:16px;transform:translateX(-50%);
       background:#111827;color:#fff;
@@ -124,6 +145,13 @@
       max-width:92vw;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;
     }
     .ck-toast.show{opacity:.95}
+    @media (max-width:720px){
+      .ck-toggle{grid-template-columns:1fr}
+      .ck-row{flex-direction:column;align-items:stretch}
+      .ck-field{width:100%}
+      .ck-keypad-grid{grid-template-columns:repeat(3, minmax(64px, 1fr))}
+      .ck-key.wide{grid-column:span 1}
+    }
   </style>
 </head>
 
@@ -171,17 +199,6 @@
           <button class="ck-btn secondary" id="aClear">クリア</button>
         </div>
 
-        <div class="ck-quick">
-          <div class="ck-quick-title">よく使う例</div>
-          <div class="ck-chiprow" aria-label="クイック入力">
-            <button class="ck-chip" data-dec="6.25">6.25（6時間15分）</button>
-            <button class="ck-chip" data-dec="7.5">7.5（7時間30分）</button>
-            <button class="ck-chip" data-dec="0.1">0.1（6分）</button>
-            <button class="ck-chip" data-dec="0.75">0.75（45分）</button>
-            <button class="ck-chip" data-dec="1.2">1.2（1時間12分）</button>
-            <button class="ck-chip" data-dec="8">8（8時間）</button>
-          </div>
-        </div>
       </div>
 
       <div id="panelB" role="tabpanel" aria-labelledby="modeB" hidden>
@@ -222,6 +239,27 @@
           <button class="ck-btn secondary" id="bClear">クリア</button>
         </div>
       </div>
+
+      <div class="ck-keypad" aria-label="数字入力パッド">
+        <div class="ck-keypad-title">数字入力</div>
+        <div class="ck-keypad-grid">
+          <button class="ck-key" data-key="7">7</button>
+          <button class="ck-key" data-key="8">8</button>
+          <button class="ck-key" data-key="9">9</button>
+          <button class="ck-key action" data-key="back">⌫</button>
+          <button class="ck-key" data-key="4">4</button>
+          <button class="ck-key" data-key="5">5</button>
+          <button class="ck-key" data-key="6">6</button>
+          <button class="ck-key action" data-key="clear">AC</button>
+          <button class="ck-key" data-key="1">1</button>
+          <button class="ck-key" data-key="2">2</button>
+          <button class="ck-key" data-key="3">3</button>
+          <button class="ck-key action" data-key="swap">↔</button>
+          <button class="ck-key wide" data-key="0">0</button>
+          <button class="ck-key" data-key=".">.</button>
+          <button class="ck-key action" data-key="enter">入力</button>
+        </div>
+      </div>
     </section>
 
     <details class="ck-details">
@@ -253,27 +291,6 @@
       </div>
     </details>
 
-    <section class="ck-faq" aria-labelledby="faqTitle">
-      <h2 id="faqTitle">よくある質問</h2>
-      <dl>
-        <div>
-          <dt>Q. 6.3時間は何時間何分ですか？</dt>
-          <dd>A. 6時間18分です。</dd>
-        </div>
-        <div>
-          <dt>Q. 0.1時間は何分ですか？</dt>
-          <dd>A. 6分です。</dd>
-        </div>
-        <div>
-          <dt>Q. 0.25時間は何分ですか？</dt>
-          <dd>A. 15分です。</dd>
-        </div>
-        <div>
-          <dt>Q. 7時間30分は小数時間でいくつですか？</dt>
-          <dd>A. 7.50時間です（表示設定で変わる場合があります）。</dd>
-        </div>
-      </dl>
-    </section>
   </main>
 
   <div class="ck-toast" id="toast">コピーしました</div>
@@ -587,14 +604,6 @@
       r.addEventListener('change', computeB);
     });
 
-    document.querySelectorAll('[data-dec]').forEach(function(btn){
-      btn.addEventListener('click', function(){
-        decHours.value = btn.getAttribute('data-dec');
-        computeA();
-        decHours.focus();
-      });
-    });
-
     aCopy.addEventListener('click', function(){
       copyText(lastAResult).then(function(){ showToast('コピーしました'); })
         .catch(function(){ showToast('コピーに失敗しました'); });
@@ -616,51 +625,54 @@
       hInt.focus();
     });
 
+    function getActiveInput(){
+      var active = document.activeElement;
+      if (active === decHours || active === hInt || active === mInt){
+        return active;
+      }
+      if (!panelA.hidden){
+        return decHours;
+      }
+      return hInt;
+    }
+
+    function applyKey(input, key){
+      if (key === 'swap'){
+        var nextMode = panelA.hidden ? 'a' : 'b';
+        document.getElementById('mode' + nextMode.toUpperCase()).checked = true;
+        setMode(nextMode);
+        return;
+      }
+      if (key === 'clear'){
+        input.value = '';
+      }else if (key === 'back'){
+        input.value = input.value.slice(0, -1);
+      }else if (key === 'enter'){
+        input.blur();
+      }else{
+        input.value = input.value + key;
+      }
+      if (input === decHours){
+        computeA();
+      }else{
+        computeB();
+      }
+      input.focus();
+    }
+
+    document.querySelectorAll('.ck-keypad [data-key]').forEach(function(btn){
+      btn.addEventListener('click', function(){
+        var key = btn.getAttribute('data-key');
+        var input = getActiveInput();
+        applyKey(input, key);
+      });
+    });
+
     // Initial
     computeA();
     computeB();
     setMode('a');
   </script>
 
-  <script type="application/ld+json">
-    {
-      "@context": "https://schema.org",
-      "@type": "FAQPage",
-      "mainEntity": [
-        {
-          "@type": "Question",
-          "name": "6.3時間は何時間何分ですか？",
-          "acceptedAnswer": {
-            "@type": "Answer",
-            "text": "6時間18分です。"
-          }
-        },
-        {
-          "@type": "Question",
-          "name": "0.1時間は何分ですか？",
-          "acceptedAnswer": {
-            "@type": "Answer",
-            "text": "6分です。"
-          }
-        },
-        {
-          "@type": "Question",
-          "name": "0.25時間は何分ですか？",
-          "acceptedAnswer": {
-            "@type": "Answer",
-            "text": "15分です。"
-          }
-        },
-        {
-          "@type": "Question",
-          "name": "7時間30分は小数時間でいくつですか？",
-          "acceptedAnswer": {
-            "@type": "Answer",
-            "text": "7.50時間です（表示設定で変わる場合があります）。"
-          }
-        }
-      ]
-    }
-  </script>
 </body>
 </html>
