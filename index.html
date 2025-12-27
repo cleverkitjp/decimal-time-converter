@@ -47,6 +47,19 @@
       flex-wrap:wrap;
     }
     .ck-card-header h2{margin:0;font-size:1.05rem;color:#0f172a}
+    .ck-mode-pill{
+      display:inline-flex;
+      align-items:center;
+      gap:6px;
+      padding:6px 12px;
+      border-radius:999px;
+      background:#e3efff;
+      color:#0b2a55;
+      font-weight:900;
+      font-size:.92rem;
+      border:1px solid #c7dcff;
+      box-shadow:inset 0 -1px 0 rgba(15,23,42,.1);
+    }
     .ck-card > h2{margin:0 0 10px;font-size:1.05rem;color:#0f172a}
     .ck-example{
       margin:-4px 0 12px;
@@ -79,6 +92,26 @@
       min-height:56px;
       display:flex;
       align-items:center;
+    }
+    .ck-input-display .ck-slot{
+      display:inline-flex;
+      align-items:center;
+      padding:2px 6px;
+      border-radius:8px;
+      border:1px solid transparent;
+      min-width:32px;
+      justify-content:center;
+    }
+    .ck-input-display .ck-slot.active{
+      border-color:#1f66c1;
+      background:#eef4ff;
+      box-shadow:0 0 0 2px rgba(31,102,193,.18);
+    }
+    .ck-input-display .ck-unit{
+      margin:0 6px;
+      font-size:1rem;
+      color:#475569;
+      font-weight:800;
     }
     .ck-field input:focus, .ck-field select:focus{outline:3px solid rgba(31,102,193,.25);outline-offset:2px}
     .ck-result{
@@ -117,8 +150,8 @@
         "seven eight nine"
         "four five six"
         "one two three"
-        "clear zero dot"
-        "back back back";
+        "clear zero next"
+        "dot back back";
     }
     .ck-key{
       border:1px solid #cbd5e1;
@@ -132,6 +165,7 @@
     }
     .ck-key:disabled{cursor:not-allowed;opacity:.45}
     .ck-key.action{background:#1e293b;color:#fff;border-color:#1e293b}
+    .ck-key.ac{background:#9f3a38;border-color:#9f3a38}
     .ck-key[data-key="7"]{grid-area:seven}
     .ck-key[data-key="8"]{grid-area:eight}
     .ck-key[data-key="9"]{grid-area:nine}
@@ -145,6 +179,7 @@
     .ck-key[data-key="3"]{grid-area:three}
     .ck-key[data-key="0"]{grid-area:zero}
     .ck-key[data-key="."]{grid-area:dot}
+    .ck-key[data-key="next"]{grid-area:next}
     .ck-seg{display:flex;gap:8px;flex-wrap:wrap}
     .ck-seg input{display:none}
     .ck-seg label{
@@ -173,8 +208,8 @@
           "seven eight nine"
           "four five six"
           "one two three"
-          "clear zero dot"
-          "back back back";
+          "clear zero next"
+          "dot back back";
       }
       .ck-key{padding:12px 6px;font-size:1rem}
     }
@@ -192,27 +227,10 @@
       <section class="ck-card">
         <div class="ck-card-header">
           <h2>小数時間 → 時間・分</h2>
+          <span class="ck-mode-pill">現在：小数時間 → 時間・分</span>
           <button class="ck-btn secondary" id="toggleMode">変換方向切替</button>
         </div>
         <div class="ck-input-display" id="decDisplay" aria-label="小数時間の入力">—</div>
-        <div class="ck-row" style="margin-top:12px">
-          <div class="ck-field" style="min-width:260px;">
-            <label>小数表示</label>
-            <div class="ck-seg" role="radiogroup" aria-label="小数表示の桁数">
-              <input type="radio" name="decFmt" id="fmtRaw" value="raw" checked>
-              <label for="fmtRaw">自動</label>
-
-              <input type="radio" name="decFmt" id="fmt1" value="1">
-              <label for="fmt1">1桁</label>
-
-              <input type="radio" name="decFmt" id="fmt2" value="2">
-              <label for="fmt2">2桁</label>
-
-              <input type="radio" name="decFmt" id="fmt3" value="3">
-              <label for="fmt3">3桁</label>
-            </div>
-          </div>
-        </div>
 
         <div class="ck-result" id="aResultBox" role="status" aria-live="polite">
           <div class="big" id="aBig">—</div>
@@ -223,8 +241,8 @@
 
       <div class="ck-actions">
         <button class="ck-btn" id="aCopy" disabled>コピー</button>
-        <button class="ck-btn secondary" id="aClear">クリア</button>
       </div>
+      <div class="ck-decfmt-slot" id="decFmtSlotA"></div>
 
     </div>
 
@@ -232,6 +250,7 @@
       <section class="ck-card">
         <div class="ck-card-header">
           <h2>時間・分 → 小数時間</h2>
+          <span class="ck-mode-pill">現在：時間・分 → 小数時間</span>
           <button class="ck-btn secondary" id="toggleModeB">変換方向切替</button>
         </div>
         <div class="ck-input-display" id="timeDisplay" aria-label="時間分の入力">—</div>
@@ -244,9 +263,29 @@
       <div class="ck-err" id="bErr" hidden></div>
 
       <div class="ck-actions">
-        <button class="ck-btn" id="bNext" hidden>次へ</button>
         <button class="ck-btn" id="bCopy" disabled>コピー</button>
-        <button class="ck-btn secondary" id="bClear">クリア</button>
+      </div>
+      <div class="ck-decfmt-slot" id="decFmtSlotB"></div>
+    </div>
+
+    <div id="decFmtBlock">
+      <div class="ck-row" style="margin-top:12px">
+        <div class="ck-field" style="min-width:260px;">
+          <label>小数表示</label>
+          <div class="ck-seg" role="radiogroup" aria-label="小数表示の桁数">
+            <input type="radio" name="decFmt" id="fmtRaw" value="raw" checked>
+            <label for="fmtRaw">自動</label>
+
+            <input type="radio" name="decFmt" id="fmt1" value="1">
+            <label for="fmt1">1桁</label>
+
+            <input type="radio" name="decFmt" id="fmt2" value="2">
+            <label for="fmt2">2桁</label>
+
+            <input type="radio" name="decFmt" id="fmt3" value="3">
+            <label for="fmt3">3桁</label>
+          </div>
+        </div>
       </div>
     </div>
 
@@ -262,8 +301,9 @@
         <button class="ck-key" data-key="1">1</button>
         <button class="ck-key" data-key="2">2</button>
         <button class="ck-key" data-key="3">3</button>
-        <button class="ck-key action" data-key="clear">AC</button>
+        <button class="ck-key action ac" data-key="clear">AC</button>
         <button class="ck-key" data-key="0">0</button>
+        <button class="ck-key action" data-key="next" id="bNext">次へ</button>
         <button class="ck-key" data-key="." id="dotKey">.</button>
         <button class="ck-key action" data-key="back">⌫</button>
       </div>
@@ -359,19 +399,20 @@
     var aSmall = $('aSmall');
     var aErr = $('aErr');
     var aCopy = $('aCopy');
-    var aClear = $('aClear');
     var panelA = $('panelA');
     var panelB = $('panelB');
     var toggleMode = $('toggleMode');
     var toggleModeB = $('toggleModeB');
     var dotKey = $('dotKey');
+    var decFmtBlock = $('decFmtBlock');
+    var decFmtSlotA = $('decFmtSlotA');
+    var decFmtSlotB = $('decFmtSlotB');
 
     var timeDisplay = $('timeDisplay');
     var bBig = $('bBig');
     var bSmall = $('bSmall');
     var bErr = $('bErr');
     var bCopy = $('bCopy');
-    var bClear = $('bClear');
     var bNext = $('bNext');
 
     var lastAResult = '';
@@ -399,6 +440,14 @@
       panelA.hidden = isB;
       panelB.hidden = !isB;
       if (dotKey) dotKey.disabled = isB;
+      if (bNext) bNext.hidden = !isB;
+      if (decFmtBlock){
+        if (isB){
+          decFmtSlotB.appendChild(decFmtBlock);
+        }else{
+          decFmtSlotA.appendChild(decFmtBlock);
+        }
+      }
       if (isB){
         computeB();
       }else{
@@ -410,10 +459,11 @@
     function computeA(){
       var raw = decInput;
       var fmt = document.querySelector('input[name="decFmt"]:checked')?.value || 'raw';
-      decDisplay.textContent = formatDecimalDisplay(raw, fmt);
+      var displayValue = raw ? formatDecimalDisplay(raw, fmt) : '__';
+      decDisplay.innerHTML = '<span class="ck-slot active">' + displayValue + '</span>';
       if (!raw){
-        aBig.textContent = '—';
-        aSmall.textContent = '入力してください';
+        aBig.textContent = '__時__分';
+        aSmall.textContent = '小数時間を入力してください';
         setError(aErr, '');
         aCopy.disabled = true;
         lastAResult = '';
@@ -464,9 +514,14 @@
 
     // ===== B: h m -> decimal hours =====
     function updateTimeDisplay(){
-      var h = bHourInput || '—';
-      var m = (bStep === 'minute' || bMinInput) ? (bMinInput || '—') : '—';
-      timeDisplay.textContent = h + '時間' + m + '分';
+      var h = bHourInput || '__';
+      var m = bMinInput || '__';
+      var hourClass = bStep === 'hour' ? 'ck-slot active' : 'ck-slot';
+      var minClass = bStep === 'minute' ? 'ck-slot active' : 'ck-slot';
+      timeDisplay.innerHTML = '<span class="' + hourClass + '">' + h + '</span>' +
+        '<span class="ck-unit">時間</span>' +
+        '<span class="' + minClass + '">' + m + '</span>' +
+        '<span class="ck-unit">分</span>';
     }
 
     function computeB(){
@@ -477,19 +532,15 @@
 
       if (!bHourInput){
         bBig.textContent = '—';
-        bSmall.textContent = '時を入力してください';
-        bNext.hidden = true;
+        bSmall.textContent = '時を入力してください（「次へ」で0時間として分へ移動）';
         return;
       }
 
       if (bStep === 'hour'){
         bBig.textContent = '—';
         bSmall.textContent = '「次へ」で分を入力します';
-        bNext.hidden = false;
         return;
       }
-
-      bNext.hidden = true;
 
       if (!bMinInput){
         bBig.textContent = '—';
@@ -535,11 +586,6 @@
         .catch(function(){ showToast('コピーに失敗しました'); });
     });
 
-    aClear.addEventListener('click', function(){
-      decInput = '';
-      computeA();
-    });
-
     function applyKey(key){
       if (mode === 'B'){
         if (key === 'clear'){
@@ -558,6 +604,13 @@
           }
         }else if (key === '.'){
           return;
+        }else if (key === 'next'){
+          if (bStep === 'hour'){
+            if (!bHourInput) bHourInput = '0';
+            bStep = 'minute';
+          }else{
+            bStep = 'hour';
+          }
         }else{
           if (bStep === 'hour'){
             bHourInput = bHourInput + key;
@@ -574,6 +627,8 @@
         }else if (key === '.'){
           if (decInput.includes('.')) return;
           decInput = decInput ? decInput + key : '0.';
+        }else if (key === 'next'){
+          return;
         }else{
           decInput = decInput + key;
         }
@@ -604,26 +659,13 @@
       setMode('A');
     });
 
-    bNext.addEventListener('click', function(){
-      if (!bHourInput) return;
-      bStep = 'minute';
-      computeB();
-    });
-
     bCopy.addEventListener('click', function(){
       copyText(lastBResult).then(function(){ showToast('コピーしました'); })
         .catch(function(){ showToast('コピーに失敗しました'); });
     });
 
-    bClear.addEventListener('click', function(){
-      bHourInput = '';
-      bMinInput = '';
-      bStep = 'hour';
-      computeB();
-    });
-
     // Initial
-    computeA();
+    setMode('A');
   </script>
 
 </body>
