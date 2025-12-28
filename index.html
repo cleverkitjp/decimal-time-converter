@@ -170,8 +170,8 @@
         "seven eight nine"
         "four five six"
         "one two three"
-        "clear zero next"
-        "dot back back";
+        "clear zero action"
+        "back back back";
     }
     .ck-key{
       border:1px solid #cbd5e1;
@@ -198,8 +198,8 @@
     .ck-key[data-key="2"]{grid-area:two}
     .ck-key[data-key="3"]{grid-area:three}
     .ck-key[data-key="0"]{grid-area:zero}
-    .ck-key[data-key="."]{grid-area:dot}
-    .ck-key[data-key="next"]{grid-area:next}
+    .ck-key[data-key="."]{grid-area:action}
+    .ck-key[data-key="next"]{grid-area:action}
     .ck-seg{display:flex;gap:8px;flex-wrap:wrap}
     .ck-seg input{display:none}
     .ck-seg label{
@@ -228,8 +228,8 @@
           "seven eight nine"
           "four five six"
           "one two three"
-          "clear zero next"
-          "dot back back";
+          "clear zero action"
+          "back back back";
       }
       .ck-key{padding:12px 6px;font-size:1rem}
     }
@@ -249,20 +249,20 @@
           <h2 class="ck-mode-title">小数時間 → 時間・分</h2>
         </div>
         <div class="ck-flow">
-          <div class="ck-output-display" id="aBig" role="status" aria-live="polite">0時間0分</div>
+          <div class="ck-input-display" id="decDisplay" aria-label="小数時間の入力">0.0時間</div>
           <div class="ck-switch">
             <span class="ck-arrow" aria-hidden="true">↓</span>
             <button class="ck-btn secondary" id="toggleMode">方向切替</button>
           </div>
-          <div class="ck-input-display" id="decDisplay" aria-label="小数時間の入力">0.0時間</div>
+          <div class="ck-output-display" id="aBig" role="status" aria-live="polite">0時間0分</div>
           <div class="ck-formula" id="aSmall">入力してください</div>
+        </div>
+        <div class="ck-actions">
+          <button class="ck-btn" id="aCopy" disabled>コピー</button>
         </div>
       </section>
       <div class="ck-err" id="aErr" hidden></div>
 
-      <div class="ck-actions">
-        <button class="ck-btn" id="aCopy" disabled>コピー</button>
-      </div>
       <div class="ck-decfmt-slot" id="decFmtSlotA"></div>
 
     </div>
@@ -273,20 +273,20 @@
           <h2 class="ck-mode-title">時間・分 → 小数時間</h2>
         </div>
         <div class="ck-flow">
-          <div class="ck-output-display" id="bBig" role="status" aria-live="polite">0.0時間</div>
+          <div class="ck-input-display" id="timeDisplay" aria-label="時間分の入力">0時間0分</div>
           <div class="ck-switch">
             <span class="ck-arrow" aria-hidden="true">↓</span>
             <button class="ck-btn secondary" id="toggleModeB">方向切替</button>
           </div>
-          <div class="ck-input-display" id="timeDisplay" aria-label="時間分の入力">0時間0分</div>
+          <div class="ck-output-display" id="bBig" role="status" aria-live="polite">0.0時間</div>
           <div class="ck-formula" id="bSmall">入力してください</div>
+        </div>
+        <div class="ck-actions">
+          <button class="ck-btn" id="bCopy" disabled>コピー</button>
         </div>
       </section>
       <div class="ck-err" id="bErr" hidden></div>
 
-      <div class="ck-actions">
-        <button class="ck-btn" id="bCopy" disabled>コピー</button>
-      </div>
       <div class="ck-decfmt-slot" id="decFmtSlotB"></div>
     </div>
 
@@ -468,7 +468,7 @@
       var isB = mode === 'B';
       panelA.hidden = isB;
       panelB.hidden = !isB;
-      if (dotKey) dotKey.disabled = isB;
+      if (dotKey) dotKey.hidden = isB;
       if (bNext) bNext.hidden = !isB;
       if (decFmtBlock){
         if (isB){
