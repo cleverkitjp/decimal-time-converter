@@ -47,18 +47,16 @@
       flex-wrap:wrap;
     }
     .ck-card-header h2{margin:0;font-size:1.05rem;color:#0f172a}
-    .ck-mode-pill{
-      display:inline-flex;
-      align-items:center;
-      gap:6px;
-      padding:6px 12px;
-      border-radius:999px;
-      background:#e3efff;
-      color:#0b2a55;
+    .ck-mode-title{
+      margin:0;
+      font-size:1.12rem;
       font-weight:900;
-      font-size:.92rem;
-      border:1px solid #c7dcff;
-      box-shadow:inset 0 -1px 0 rgba(15,23,42,.1);
+      color:#0f172a;
+      background:#fff3d6;
+      border:1px solid #f0d28c;
+      padding:6px 14px;
+      border-radius:999px;
+      box-shadow:inset 0 -1px 0 rgba(15,23,42,.12);
     }
     .ck-card > h2{margin:0 0 10px;font-size:1.05rem;color:#0f172a}
     .ck-example{
@@ -92,6 +90,8 @@
       min-height:56px;
       display:flex;
       align-items:center;
+      justify-content:center;
+      gap:2px;
     }
     .ck-input-display .ck-slot{
       display:inline-flex;
@@ -114,21 +114,41 @@
       font-weight:800;
     }
     .ck-field input:focus, .ck-field select:focus{outline:3px solid rgba(31,102,193,.25);outline-offset:2px}
-    .ck-result{
-      margin-top:12px;
-      padding:16px;
-      border-radius:20px;
+    .ck-output-display{
+      width:100%;
+      padding:16px 14px;
+      border-radius:16px;
       background:#0f172a;
       color:#fff;
       border:1px solid rgba(15,23,42,.7);
       box-shadow:inset 0 0 0 1px rgba(255,255,255,.05);
+      font-size:1.6rem;
+      font-weight:900;
+      text-align:center;
+      letter-spacing:.4px;
     }
-    .ck-result .big{font-size:1.75rem;font-weight:900;letter-spacing:.4px}
-    .ck-result .unit{font-size:1.1rem;font-weight:700;margin-left:4px}
+    .ck-flow{
+      display:flex;
+      flex-direction:column;
+      gap:12px;
+      margin-top:12px;
+    }
+    .ck-switch{
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      gap:12px;
+    }
+    .ck-arrow{
+      font-size:1.4rem;
+      font-weight:900;
+      color:#1f2937;
+    }
     .ck-formula{
       font-size:.92rem;
       color:var(--muted,#6b7a8a);
-      margin-top:-4px;
+      text-align:center;
+      margin:0;
     }
     .ck-actions{display:flex;gap:10px;margin-top:10px;flex-wrap:wrap}
     .ck-btn{
@@ -226,17 +246,18 @@
     <div id="panelA">
       <section class="ck-card">
         <div class="ck-card-header">
-          <h2>小数時間 → 時間・分</h2>
-          <span class="ck-mode-pill">現在：小数時間 → 時間・分</span>
-          <button class="ck-btn secondary" id="toggleMode">変換方向切替</button>
+          <h2 class="ck-mode-title">小数時間 → 時間・分</h2>
         </div>
-        <div class="ck-input-display" id="decDisplay" aria-label="小数時間の入力">—</div>
-
-        <div class="ck-result" id="aResultBox" role="status" aria-live="polite">
-          <div class="big" id="aBig">—</div>
+        <div class="ck-flow">
+          <div class="ck-output-display" id="aBig" role="status" aria-live="polite">0時間0分</div>
+          <div class="ck-switch">
+            <span class="ck-arrow" aria-hidden="true">↓</span>
+            <button class="ck-btn secondary" id="toggleMode">方向切替</button>
+          </div>
+          <div class="ck-input-display" id="decDisplay" aria-label="小数時間の入力">0.0時間</div>
+          <div class="ck-formula" id="aSmall">入力してください</div>
         </div>
       </section>
-      <div class="ck-formula" id="aSmall">入力してください</div>
       <div class="ck-err" id="aErr" hidden></div>
 
       <div class="ck-actions">
@@ -249,17 +270,18 @@
     <div id="panelB" hidden>
       <section class="ck-card">
         <div class="ck-card-header">
-          <h2>時間・分 → 小数時間</h2>
-          <span class="ck-mode-pill">現在：時間・分 → 小数時間</span>
-          <button class="ck-btn secondary" id="toggleModeB">変換方向切替</button>
+          <h2 class="ck-mode-title">時間・分 → 小数時間</h2>
         </div>
-        <div class="ck-input-display" id="timeDisplay" aria-label="時間分の入力">—</div>
-
-        <div class="ck-result" id="bResultBox" role="status" aria-live="polite">
-          <div class="big" id="bBig">—</div>
+        <div class="ck-flow">
+          <div class="ck-output-display" id="bBig" role="status" aria-live="polite">0.0時間</div>
+          <div class="ck-switch">
+            <span class="ck-arrow" aria-hidden="true">↓</span>
+            <button class="ck-btn secondary" id="toggleModeB">方向切替</button>
+          </div>
+          <div class="ck-input-display" id="timeDisplay" aria-label="時間分の入力">0時間0分</div>
+          <div class="ck-formula" id="bSmall">入力してください</div>
         </div>
       </section>
-      <div class="ck-formula" id="bSmall">入力してください</div>
       <div class="ck-err" id="bErr" hidden></div>
 
       <div class="ck-actions">
@@ -378,6 +400,13 @@
       return numStr;
     }
 
+    function getDefaultDecimalText(fmt){
+      if (fmt === 'raw') return '0.0';
+      var digits = Number(fmt);
+      if (!Number.isFinite(digits)) return '0.0';
+      return '0.' + '0'.repeat(digits);
+    }
+
     function formatDecimalDisplay(raw, fmt){
       if (!raw) return '—';
       if (raw.endsWith('.')) return raw;
@@ -459,10 +488,11 @@
     function computeA(){
       var raw = decInput;
       var fmt = document.querySelector('input[name="decFmt"]:checked')?.value || 'raw';
-      var displayValue = raw ? formatDecimalDisplay(raw, fmt) : '__';
-      decDisplay.innerHTML = '<span class="ck-slot active">' + displayValue + '</span>';
+      var displayValue = raw ? formatDecimalDisplay(raw, fmt) : getDefaultDecimalText(fmt);
+      decDisplay.innerHTML = '<span class="ck-slot active">' + displayValue + '</span>' +
+        '<span class="ck-unit">時間</span>';
       if (!raw){
-        aBig.textContent = '__時__分';
+        aBig.textContent = '0時間0分';
         aSmall.textContent = '小数時間を入力してください';
         setError(aErr, '');
         aCopy.disabled = true;
@@ -514,8 +544,8 @@
 
     // ===== B: h m -> decimal hours =====
     function updateTimeDisplay(){
-      var h = bHourInput || '__';
-      var m = bMinInput || '__';
+      var h = bHourInput || '0';
+      var m = bMinInput || '0';
       var hourClass = bStep === 'hour' ? 'ck-slot active' : 'ck-slot';
       var minClass = bStep === 'minute' ? 'ck-slot active' : 'ck-slot';
       timeDisplay.innerHTML = '<span class="' + hourClass + '">' + h + '</span>' +
@@ -530,9 +560,11 @@
       bCopy.disabled = true;
       lastBResult = '';
 
-      if (!bHourInput){
-        bBig.textContent = '—';
-        bSmall.textContent = '時を入力してください（「次へ」で0時間として分へ移動）';
+      var fmt = document.querySelector('input[name="decFmt"]:checked')?.value || 'raw';
+      if (!bHourInput && !bMinInput){
+        var defaultDec = getDefaultDecimalText(fmt);
+        bBig.textContent = defaultDec + '時間';
+        bSmall.textContent = '0h + 0min ÷ 60 = 0h';
         return;
       }
 
@@ -571,7 +603,6 @@
       }
 
       var dec = hours + minutes / 60;
-      var fmt = document.querySelector('input[name="decFmt"]:checked')?.value || 'raw';
       var decText = formatDecimalDisplay(String(dec), fmt);
 
       bBig.textContent = decText + '時間';
