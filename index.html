@@ -126,6 +126,7 @@
       font-weight:900;
       text-align:center;
       letter-spacing:.4px;
+      box-sizing:border-box;
     }
     .ck-flow{
       display:flex;
@@ -185,6 +186,7 @@
     }
     .ck-key:disabled{cursor:not-allowed;opacity:.45}
     .ck-key.action{background:#1e293b;color:#fff;border-color:#1e293b}
+    .ck-key.next{background:var(--blue,#1f66c1);color:#fff;border-color:var(--blue,#1f66c1)}
     .ck-key.ac{background:#9f3a38;border-color:#9f3a38}
     .ck-key[data-key="7"]{grid-area:seven}
     .ck-key[data-key="8"]{grid-area:eight}
@@ -240,25 +242,20 @@
   <main class="ck-wrap">
     <h1 class="ck-title">6.3時間は何時間何分？</h1>
     <p class="ck-lead">
-      6.3時間は何時間何分かをすぐ確認できる小数時間の変換ツールです。時間・分から小数時間への変換や何分換算にも対応し、無料・スマホ対応で使えます。
+      6.3時間は何時間何分かをすぐ確認できる小数時間の変換ツールです。無料・スマホ対応で使えます。
     </p>
 
     <div id="panelA">
       <section class="ck-card">
-        <div class="ck-card-header">
-          <h2 class="ck-mode-title">小数時間 → 時間・分</h2>
-        </div>
         <div class="ck-flow">
           <div class="ck-input-display" id="decDisplay" aria-label="小数時間の入力">0.0時間</div>
           <div class="ck-switch">
             <span class="ck-arrow" aria-hidden="true">↓</span>
             <button class="ck-btn secondary" id="toggleMode">方向切替</button>
+            <button class="ck-btn" id="aCopy" disabled>コピー</button>
           </div>
           <div class="ck-output-display" id="aBig" role="status" aria-live="polite">0時間0分</div>
           <div class="ck-formula" id="aSmall">入力してください</div>
-        </div>
-        <div class="ck-actions">
-          <button class="ck-btn" id="aCopy" disabled>コピー</button>
         </div>
       </section>
       <div class="ck-err" id="aErr" hidden></div>
@@ -269,20 +266,15 @@
 
     <div id="panelB" hidden>
       <section class="ck-card">
-        <div class="ck-card-header">
-          <h2 class="ck-mode-title">時間・分 → 小数時間</h2>
-        </div>
         <div class="ck-flow">
           <div class="ck-input-display" id="timeDisplay" aria-label="時間分の入力">0時間0分</div>
           <div class="ck-switch">
             <span class="ck-arrow" aria-hidden="true">↓</span>
             <button class="ck-btn secondary" id="toggleModeB">方向切替</button>
+            <button class="ck-btn" id="bCopy" disabled>コピー</button>
           </div>
           <div class="ck-output-display" id="bBig" role="status" aria-live="polite">0.0時間</div>
           <div class="ck-formula" id="bSmall">入力してください</div>
-        </div>
-        <div class="ck-actions">
-          <button class="ck-btn" id="bCopy" disabled>コピー</button>
         </div>
       </section>
       <div class="ck-err" id="bErr" hidden></div>
@@ -325,7 +317,7 @@
         <button class="ck-key" data-key="3">3</button>
         <button class="ck-key action ac" data-key="clear">AC</button>
         <button class="ck-key" data-key="0">0</button>
-        <button class="ck-key action" data-key="next" id="bNext">次へ</button>
+        <button class="ck-key action next" data-key="next" id="bNext">次へ</button>
         <button class="ck-key" data-key="." id="dotKey">.</button>
         <button class="ck-key action" data-key="back">⌫</button>
       </div>
@@ -568,20 +560,8 @@
         return;
       }
 
-      if (bStep === 'hour'){
-        bBig.textContent = '—';
-        bSmall.textContent = '「次へ」で分を入力します';
-        return;
-      }
-
-      if (!bMinInput){
-        bBig.textContent = '—';
-        bSmall.textContent = '分を入力してください';
-        return;
-      }
-
-      var hours = Number(bHourInput);
-      var minutes = Number(bMinInput);
+      var hours = Number(bHourInput || '0');
+      var minutes = Number(bMinInput || '0');
 
       if (!Number.isFinite(hours) || !Number.isFinite(minutes)){
         bBig.textContent = '—';
