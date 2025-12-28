@@ -127,6 +127,20 @@
       text-align:center;
       letter-spacing:.4px;
       box-sizing:border-box;
+      display:flex;
+      align-items:baseline;
+      justify-content:center;
+      gap:8px;
+    }
+    .ck-output-display .ck-answer-label{
+      font-size:.92rem;
+      font-weight:600;
+      letter-spacing:.1px;
+      opacity:.8;
+    }
+    .ck-output-display .ck-answer-value{
+      font-size:1.6rem;
+      font-weight:900;
     }
     .ck-flow{
       display:flex;
@@ -144,12 +158,6 @@
       font-size:1.4rem;
       font-weight:900;
       color:#1f2937;
-    }
-    .ck-formula{
-      font-size:.92rem;
-      color:var(--muted,#6b7a8a);
-      text-align:center;
-      margin:0;
     }
     .ck-actions{display:flex;gap:10px;margin-top:10px;flex-wrap:wrap}
     .ck-btn{
@@ -220,6 +228,25 @@
       max-width:92vw;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;
     }
     .ck-toast.show{opacity:.95}
+    .ck-faq{
+      margin-top:32px;
+      color:var(--muted,#6b7a8a);
+      font-size:.92rem;
+      line-height:1.65;
+    }
+    .ck-faq h2{
+      margin:0 0 8px;
+      font-size:1rem;
+      font-weight:700;
+      color:#475569;
+    }
+    .ck-faq dl{margin:10px 0 0}
+    .ck-faq dt{
+      margin-top:14px;
+      font-weight:700;
+      color:#334155;
+    }
+    .ck-faq dd{margin:6px 0 0}
     @media (max-width:720px){
       .ck-row{flex-direction:column;align-items:stretch}
       .ck-field{width:100%}
@@ -255,7 +282,6 @@
             <button class="ck-btn" id="aCopy" disabled>コピー</button>
           </div>
           <div class="ck-output-display" id="aBig" role="status" aria-live="polite">0時間0分</div>
-          <div class="ck-formula" id="aSmall">入力してください</div>
         </div>
       </section>
       <div class="ck-err" id="aErr" hidden></div>
@@ -274,7 +300,6 @@
             <button class="ck-btn" id="bCopy" disabled>コピー</button>
           </div>
           <div class="ck-output-display" id="bBig" role="status" aria-live="polite">0.0時間</div>
-          <div class="ck-formula" id="bSmall">入力してください</div>
         </div>
       </section>
       <div class="ck-err" id="bErr" hidden></div>
@@ -322,6 +347,33 @@
         <button class="ck-key action" data-key="back">⌫</button>
       </div>
     </div>
+
+    <section class="ck-faq" aria-label="よくある質問">
+      <h2>よくある質問（FAQ）</h2>
+      <p>小数時間と時間・分の変換で、よくある疑問をまとめました。</p>
+      <dl>
+        <dt>Q1. 6.3時間は何時間何分ですか？</dt>
+        <dd>
+          6.3時間は6時間18分です。<br>
+          小数部分の0.3時間を分に換算すると、0.3 × 60 = 18分になります。
+        </dd>
+        <dt>Q2. 0.1時間は何分ですか？</dt>
+        <dd>
+          0.1時間は6分です。<br>
+          小数時間に60を掛けることで、分に換算できます。
+        </dd>
+        <dt>Q3. 端数はどのように処理されていますか？</dt>
+        <dd>
+          このツールでは、小数部分 × 60 の結果を四捨五入して分に換算しています。<br>
+          例えば 0.016時間（0.96分）は、四捨五入して1分として表示されます。
+        </dd>
+        <dt>Q4. どんなときに使うツールですか？</dt>
+        <dd>
+          小数時間を時間・分に直したいときや、時間・分を小数時間に直したいときに使えます。<br>
+          勤務時間・作業時間の確認などで、どちらの方向でも変換できるのが特長です。
+        </dd>
+      </dl>
+    </section>
 
   </main>
 
@@ -417,7 +469,6 @@
     // ===== Elements =====
     var decDisplay = $('decDisplay');
     var aBig = $('aBig');
-    var aSmall = $('aSmall');
     var aErr = $('aErr');
     var aCopy = $('aCopy');
     var panelA = $('panelA');
@@ -431,7 +482,6 @@
 
     var timeDisplay = $('timeDisplay');
     var bBig = $('bBig');
-    var bSmall = $('bSmall');
     var bErr = $('bErr');
     var bCopy = $('bCopy');
     var bNext = $('bNext');
@@ -476,6 +526,10 @@
       }
     }
 
+    function setAnswerDisplay(el, text){
+      el.innerHTML = '<span class="ck-answer-label">答え：</span><span class="ck-answer-value">' + text + '</span>';
+    }
+
     // ===== A: decimal hours -> h m =====
     function computeA(){
       var raw = decInput;
@@ -484,8 +538,7 @@
       decDisplay.innerHTML = '<span class="ck-slot active">' + displayValue + '</span>' +
         '<span class="ck-unit">時間</span>';
       if (!raw){
-        aBig.textContent = '0時間0分';
-        aSmall.textContent = '小数時間を入力してください';
+        setAnswerDisplay(aBig, '0時間0分');
         setError(aErr, '');
         aCopy.disabled = true;
         lastAResult = '';
@@ -494,16 +547,14 @@
 
       var x = Number(raw);
       if (!Number.isFinite(x)){
-        aBig.textContent = '—';
-        aSmall.textContent = '数値として解釈できません';
+        setAnswerDisplay(aBig, '—');
         setError(aErr, '小数時間を数値で入力してください（例：6.3）。');
         aCopy.disabled = true;
         lastAResult = '';
         return;
       }
       if (x < 0){
-        aBig.textContent = '—';
-        aSmall.textContent = '負の数は不可';
+        setAnswerDisplay(aBig, '—');
         setError(aErr, '負の小数時間は入力できません。');
         aCopy.disabled = true;
         lastAResult = '';
@@ -528,8 +579,7 @@
       var out = hours + '時間' + minutes + '分';
       lastAResult = out;
 
-      aBig.textContent = out;
-      aSmall.textContent = hours + 'h + ' + trimZeros(String(frac)) + 'h × 60 = ' + rawMinutes + 'min';
+      setAnswerDisplay(aBig, out);
       setError(aErr, '');
       aCopy.disabled = false;
     }
@@ -555,8 +605,7 @@
       var fmt = document.querySelector('input[name="decFmt"]:checked')?.value || 'raw';
       if (!bHourInput && !bMinInput){
         var defaultDec = getDefaultDecimalText(fmt);
-        bBig.textContent = defaultDec + '時間';
-        bSmall.textContent = '0h + 0min ÷ 60 = 0h';
+        setAnswerDisplay(bBig, defaultDec + '時間');
         return;
       }
 
@@ -564,20 +613,17 @@
       var minutes = Number(bMinInput || '0');
 
       if (!Number.isFinite(hours) || !Number.isFinite(minutes)){
-        bBig.textContent = '—';
-        bSmall.textContent = '数値として解釈できません';
+        setAnswerDisplay(bBig, '—');
         setError(bErr, '時間・分は数値で入力してください。');
         return;
       }
       if (hours < 0 || minutes < 0){
-        bBig.textContent = '—';
-        bSmall.textContent = '負の数は不可';
+        setAnswerDisplay(bBig, '—');
         setError(bErr, '負の時間・分は入力できません。');
         return;
       }
       if (minutes >= 60){
-        bBig.textContent = '—';
-        bSmall.textContent = '分は0〜59で入力してください';
+        setAnswerDisplay(bBig, '—');
         setError(bErr, '分は0〜59の範囲で入力してください。');
         return;
       }
@@ -585,8 +631,7 @@
       var dec = hours + minutes / 60;
       var decText = formatDecimalDisplay(String(dec), fmt);
 
-      bBig.textContent = decText + '時間';
-      bSmall.textContent = hours + 'h + ' + minutes + 'min ÷ 60 = ' + trimZeros((minutes / 60).toFixed(6)) + 'h';
+      setAnswerDisplay(bBig, decText + '時間');
       lastBResult = decText + '時間';
       bCopy.disabled = false;
     }
